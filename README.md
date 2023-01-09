@@ -27,6 +27,9 @@ This was a manual process that extracted 'MAINTEXT.fnt' from 'Font.pck' and stri
 
 There's a [Lunar IPS patch available for it here](https://github.com/JuicyStandoffishMan/WhiteAlbumTranslationTools/blob/master/resources/Font%20patch.zip) that gets applied to Font.pck.
 
+### Batch Import/Export/Merging
+Currently a TODO, which will happen when Form1.cs is made to be less terrible.
+
 ## Translation
 An ongoing effort is being made to translate the game. Translated scripts can be found in the [tl folder](https://github.com/JuicyStandoffishMan/WhiteAlbumTranslationTools/tree/master/tl). Batch importing is not support yet.
 
