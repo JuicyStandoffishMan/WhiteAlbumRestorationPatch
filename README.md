@@ -1,6 +1,6 @@
 # White Album 1 Translation Tools
 
-This is a collection of tools to aid in extracting and modifying White Album 1 (2012 PC version) to create an English translation.
+This is a collection of tools to aid in extracting and modifying White Album 1 (2012 PC version) resources to create an English translation.
 
 ## Building
 
