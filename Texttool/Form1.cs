@@ -931,17 +931,12 @@ namespace Texttool
 							throw new Exception("Line block mismatch (" + str_bid + " " + jp_text + ")");
 						}
 
-						if (jp_text == null)
-						{
-							continue;
-						}
-
 						if (line_block == null)
 						{
 							throw new Exception("Line block mismatch");
 						}
 
-						if (jp_text != line_block.Text)
+						if (jp_text != null && jp_text != "" && jp_text != line_block.Text)
 						{
 							throw new Exception("JP text mismatch");
 						}
