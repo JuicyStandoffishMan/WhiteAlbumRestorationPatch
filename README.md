@@ -27,6 +27,20 @@ This was a manual process that extracted 'MAINTEXT.fnt' from 'Font.pck' and stri
 
 There's a [Lunar IPS patch available for it here](https://github.com/JuicyStandoffishMan/WhiteAlbumTranslationTools/blob/master/resources/Font%20patch.zip) that gets applied to Font.pck.
 
+## Translation
+An ongoing effort is being made to translate the game. Translated scripts can be found in the [tl folder](https://github.com/JuicyStandoffishMan/WhiteAlbumTranslationTools/tree/master/tl). Batch importing is not support yet.
+
+### Progress
+1/1107
+
+### Commit Guidelines
+When pushing new spreadsheet files, be sure that:
+- None of the Japanese text is included with the committed spreadsheet.
+- The copied .bin file, which is a blob of the original file, is not included.
+- Personal information is not attached to the file. [Use this guide for removing it in Excel](https://support.microsoft.com/en-us/office/remove-hidden-data-and-personal-information-by-inspecting-documents-presentations-or-workbooks-356b7b5d-77af-44fe-a07f-9aa4d085966f).
+
+Make sure 'Block ID' (column B) is unchanged and either the JP text (column E) is blank or exactly matches the original for the importing to work.
+
 ## Licenses
 - [Scarlet](https://github.com/xdanieldzd/Scarlet/blob/master/LICENSE.md)
 - [DALTools](https://github.com/thesupersonic16/DALTools)
