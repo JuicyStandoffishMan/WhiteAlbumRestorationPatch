@@ -33,6 +33,8 @@ Currently a TODO, which will happen when Form1.cs is made to be less terrible.
 ## Translation
 An ongoing effort is being made to translate the game. Translated scripts can be found in the [tl folder](https://github.com/JuicyStandoffishMan/WhiteAlbumTranslationTools/tree/master/tl). Batch importing is not support yet.
 
+### [Video Preview](https://www.youtube.com/watch?v=9sM0kkkhB_g)
+
 ### Progress
 1/1107
 
