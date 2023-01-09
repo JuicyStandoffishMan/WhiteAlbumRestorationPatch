@@ -9,7 +9,7 @@ Visual Studio 2022 with .NET Core 6.
 ## Usage
 
 ### Script Extraction
-Drag 'Data/Game'Script.sdat' into the window. Click "Export" to export an excel spreadsheet for translating, and "Import" to re-import it. Click save to update Script.sdat.
+Drag 'Data/Game/Script.sdat' into the window. Click "Export" to export an excel spreadsheet for translating, and "Import" to re-import it. Click save to update Script.sdat.
 
 ### Executable Patching
 Drag 'WHITE ALBUM.exe' into the window to apply the following data changes:
