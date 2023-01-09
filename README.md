@@ -23,11 +23,11 @@ public int CharsPerLine = 0x3D;
 ```
 
 ### Font Extraction
-This was a manual process that extracted 'MAINTEXT.fnt' from 'Font.pck' and stripped the header, producing a raw .tex file that was then converted into MAINTEXT.png (which is available in the resources folder).
+This was a manual process that extracted 'MAINTEXT.fnt' from 'Font.pck' and stripped the header, producing a raw .tex file that was then converted into MAINTEXT.png. It was then scaled down to 75%, expanded to be 1512x1134, and had English characters with decoration manually added. The new font characters are available in MAINTEXT.png, but the original characters are blacked out due to copyright. Dragging this file will repack it into 'Font.pck', assuming it's in the same folder where the file was dragged from.
 
 ## Licenses
 - [Scarlet](https://github.com/xdanieldzd/Scarlet/blob/master/LICENSE.md)
 - [DALTools](https://github.com/thesupersonic16/DALTools)
 
 ## Disclaimer
-This repo and its contributors are not affiliated with Leaf/Aquaplus. Also the code sucks.
+This repo and its contributors are not affiliated with Leaf/Aquaplus. None of the original game's content is in this repo for copyright reasons. Also the code sucks.
