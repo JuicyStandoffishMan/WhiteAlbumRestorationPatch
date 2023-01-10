@@ -12,7 +12,7 @@ Visual Studio 2022 with .NET Core 6.
 Drag 'Data/Game/Script.sdat' into the window. Click "Export" to export an excel spreadsheet for translating, and "Import" to re-import it. Click save to update Script.sdat.
 
 ### Importing Scripts from the Repo
-Copy the files from the [tl folder](/tl/) into 'Data/Game/excel/trimmed' and click "Merge Trimmed" for the script you want to merge. This will merge the English columns F-J into your full scripts in the 'Data/Game/excel' folder.
+Copy the files from the [tl folder](/tl/) into 'Data/Game/excel/trimmed' and click "Merge Trimmed" for the script you want to merge. This will merge the English columns F-J into your full scripts in the 'Data/Game/excel' folder if they exist or with a new script. Then click "Save".
 
 ### Executable Patching
 Drag 'WHITE ALBUM.exe' into the window to apply the following data changes:
