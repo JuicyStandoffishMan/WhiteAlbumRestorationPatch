@@ -1,6 +1,6 @@
 # White Album 1 Translation Project
 
-This is a collection of tools to aid in extracting and modifying [White Album 1 (2012 PC version)](https://vndb.org/r20439) resources to create an accompanying [English translation](/tl/).
+This is a collection of tools to aid in extracting and modifying [White Album 1 (2012 PC version)](https://vndb.org/r20439) resources to create an accompanying [English translation](#translation).
 
 ## Building
 
@@ -11,8 +11,12 @@ Visual Studio 2022 with .NET Core 6.
 ### Script Extraction
 Drag 'Data/Game/Script.sdat' into the window. Click "Export" to export an excel spreadsheet for translating, and "Import" to re-import it. Click save to update Script.sdat.
 
-### Importing Scripts from the Repo
-Copy the files from the [tl folder](/tl/) into 'Data/Game/excel/trimmed' and click "Merge Trimmed" for the script you want to merge. This will merge the English columns F-J into your full scripts in the 'Data/Game/excel' folder if they exist or with a new script. Then click "Save".
+### Modifying and Importing Scripts
+The tool will apply the script located in the 'Data/Game/excel' folder. Note that column **F "Edited"** is the English text that gets used when importing. The columns on the right are for aiding in translating and editing. When finished editing, click "Import" for the script and then "Save" to update the Scripts.sdat file and then reload the game.
+
+To use the translated scripts that are located in the [tl folder of this repo](/tl/), copy its files into your 'Data/Game/excel/trimmed' folder and click "Merge Trimmed" for each script you want to merge. This will merge the English columns F-J into your full scripts in the 'Data/Game/excel' folder if they exist or with a new script. Then click "Save".
+
+**Batch importing and saving is not yet supported**, so you have to do the above process manually for each script.
 
 ### Executable Patching
 Drag 'WHITE ALBUM.exe' into the window to apply the following data changes:
