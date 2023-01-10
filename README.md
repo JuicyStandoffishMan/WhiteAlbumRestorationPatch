@@ -34,12 +34,12 @@ Alternatively, there's a [Lunar IPS patch available for it here](/resources/Font
 Currently a TODO, which will happen when Form1.cs is made to be less terrible.
 
 ## Translation
-An ongoing effort is being made to translate the game. Translated scripts can be found in the [tl folder](/tl/). Batch importing is not support yet.
-
-### [Video Preview](https://www.youtube.com/watch?v=9sM0kkkhB_g)
+An ongoing effort is being made to translate the game. Translated scripts can be found in the [tl folder](/tl/). Batch importing is not supported yet.
 
 ### Progress
 1/1107
+
+### [Video Preview](https://www.youtube.com/watch?v=9sM0kkkhB_g)
 
 ### Translation Commit Guidelines
 Only trimmed scripts with the original Japanese text taken out are allowed in this repo. Fortunately, this tool provides a feature to do this, as well as merge trimmed scripts with the full ones. See [Importing Scripts from the Repo](#importing-scripts-from-the-repo) for merging scripts from this repo with the source versions for editing.
