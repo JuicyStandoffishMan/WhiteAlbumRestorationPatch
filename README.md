@@ -11,6 +11,9 @@ Visual Studio 2022 with .NET Core 6.
 ### Script Extraction
 Drag 'Data/Game/Script.sdat' into the window. Click "Export" to export an excel spreadsheet for translating, and "Import" to re-import it. Click save to update Script.sdat.
 
+### Importing Scripts from the Repo
+Copy the files from the [tl folder](/tl/) into 'Data/Game/excel/trimmed' and click "Merge Trimmed" for the script you want to merge. This will merge the English columns F-J into your full scripts in the 'Data/Game/excel' folder if they exist or with a new script. Then click "Save".
+
 ### Executable Patching
 Drag 'WHITE ALBUM.exe' into the window to apply the following data changes:
 ```
@@ -31,20 +34,29 @@ Alternatively, there's a [Lunar IPS patch available for it here](/resources/Font
 Currently a TODO, which will happen when Form1.cs is made to be less terrible.
 
 ## Translation
-An ongoing effort is being made to translate the game. Translated scripts can be found in the [tl folder](/tl/). Batch importing is not support yet.
-
-### [Video Preview](https://www.youtube.com/watch?v=9sM0kkkhB_g)
+An ongoing effort is being made to translate the game. Translated scripts can be found in the [tl folder](/tl/). Batch importing is not supported yet.
 
 ### Progress
 1/1107
 
-### Commit Guidelines
-When pushing new spreadsheet files, be sure that:
-- None of the Japanese text is included with the committed spreadsheet.
-- The copied .bin file, which is a blob of the original file, is not included.
-- Personal information is not attached to the file. [Use this guide for removing it in Excel](https://support.microsoft.com/en-us/office/remove-hidden-data-and-personal-information-by-inspecting-documents-presentations-or-workbooks-356b7b5d-77af-44fe-a07f-9aa4d085966f).
+### [Video Preview](https://www.youtube.com/watch?v=9sM0kkkhB_g)
 
-Make sure 'Block ID' (column B) is unchanged and either the JP text (column E) is blank or exactly matches the original for the importing to work.
+### Translation Commit Guidelines
+Only trimmed scripts with the original Japanese text taken out are allowed in this repo. Fortunately, this tool provides a feature to do this, as well as merge trimmed scripts with the full ones. See [Importing Scripts from the Repo](#importing-scripts-from-the-repo) for merging scripts from this repo with the source versions for editing.
+
+#### Trimming Scripts for Commits
+Click "Import" to load the full script into the tool and then click "Export Trimmed". This will write the trimmed version into the trimmed folder (eg. '/Data/Game/excel/trimmed').
+
+Additionally, when pushing new spreadsheet files, be sure that:
+- None of the Japanese text is included with the committed spreadsheet.
+- The copied .bin file, which is a blob of the original file in the blob folder, is not included.
+- 'Block ID' (column B) is unchanged and either the JP text (column E) is blank or exactly matches the original for the importing to work.
+- Personal information is not attached to the file. [Use this guide for removing it in Excel](https://support.microsoft.com/en-us/office/remove-hidden-data-and-personal-information-by-inspecting-documents-presentations-or-workbooks-356b7b5d-77af-44fe-a07f-9aa4d085966f). Exported trimmed scripts do not contain an author, but they may contain file path information.
+
+#### Text Processing Notes
+- Quotation marks are automatically added to dialogue (lines with an author) if they're missing.
+- Word wrapping on spaces and hyphens and textbox breaking are handled automatically, since the game's backlog crashes if lines are too long.
+- Ellipses ... are automatically replaced by their single-character counterpart ….
 
 ## Licenses
 - [Scarlet](https://github.com/xdanieldzd/Scarlet/blob/master/LICENSE.md)
