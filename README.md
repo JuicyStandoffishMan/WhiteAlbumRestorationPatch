@@ -1,6 +1,6 @@
-# White Album 1 Translation Tools
+# White Album 1 Translation Project
 
-This is a collection of tools to aid in extracting and modifying White Album 1 (2012 PC version) resources to create an English translation.
+This is a collection of tools to aid in extracting and modifying [White Album 1 (2012 PC version)](https://vndb.org/r20439) resources to create an accompanying [English translation](/tl/).
 
 ## Building
 
@@ -25,7 +25,26 @@ public int CharsPerLine = 0x3D;
 ### Font Extraction
 This was a manual process that extracted 'MAINTEXT.fnt' from 'Font.pck' and stripped the header, producing a raw .tex file that was then converted into MAINTEXT.png. It was then scaled down to 75%, expanded vertically to be 1512x1134, and had English characters with decoration manually added. The new font characters are available in resources/MAINTEXT.png, but the original characters are blacked out due to copyright. Dragging this file will repack it into 'Font.pck', assuming it's in the same folder where the file was dragged from.
 
-There's a [Lunar IPS patch available for it here](https://github.com/JuicyStandoffishMan/WhiteAlbumTranslationTools/blob/master/resources/Font%20patch.zip) that gets applied to Font.pck.
+Alternatively, there's a [Lunar IPS patch available for it here](/resources/Font%20patch.zip). Just apply it to 'Data/Font.pck'.
+
+### Batch Import/Export/Merging
+Currently a TODO, which will happen when Form1.cs is made to be less terrible.
+
+## Translation
+An ongoing effort is being made to translate the game. Translated scripts can be found in the [tl folder](/tl/). Batch importing is not support yet.
+
+### [Video Preview](https://www.youtube.com/watch?v=9sM0kkkhB_g)
+
+### Progress
+1/1107
+
+### Commit Guidelines
+When pushing new spreadsheet files, be sure that:
+- None of the Japanese text is included with the committed spreadsheet.
+- The copied .bin file, which is a blob of the original file, is not included.
+- Personal information is not attached to the file. [Use this guide for removing it in Excel](https://support.microsoft.com/en-us/office/remove-hidden-data-and-personal-information-by-inspecting-documents-presentations-or-workbooks-356b7b5d-77af-44fe-a07f-9aa4d085966f).
+
+Make sure 'Block ID' (column B) is unchanged and either the JP text (column E) is blank or exactly matches the original for the importing to work.
 
 ## Licenses
 - [Scarlet](https://github.com/xdanieldzd/Scarlet/blob/master/LICENSE.md)
