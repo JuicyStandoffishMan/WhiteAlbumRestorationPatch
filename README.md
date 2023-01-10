@@ -1,6 +1,6 @@
-# White Album 1 Translation Tools
+# White Album 1 Translation Project
 
-This is a collection of tools to aid in extracting and modifying [White Album 1 (2012 PC version)](https://vndb.org/r20439) resources to create an English translation.
+This is a collection of tools to aid in extracting and modifying [White Album 1 (2012 PC version)](https://vndb.org/r20439) resources to create an accompanying [English translation](/tl/).
 
 ## Building
 
@@ -25,13 +25,13 @@ public int CharsPerLine = 0x3D;
 ### Font Extraction
 This was a manual process that extracted 'MAINTEXT.fnt' from 'Font.pck' and stripped the header, producing a raw .tex file that was then converted into MAINTEXT.png. It was then scaled down to 75%, expanded vertically to be 1512x1134, and had English characters with decoration manually added. The new font characters are available in resources/MAINTEXT.png, but the original characters are blacked out due to copyright. Dragging this file will repack it into 'Font.pck', assuming it's in the same folder where the file was dragged from.
 
-Alternatively, there's a [Lunar IPS patch available for it here](https://github.com/JuicyStandoffishMan/WhiteAlbumTranslationTools/blob/master/resources/Font%20patch.zip). Just apply it to 'Data/Font.pck'.
+Alternatively, there's a [Lunar IPS patch available for it here](/resources/Font%20patch.zip). Just apply it to 'Data/Font.pck'.
 
 ### Batch Import/Export/Merging
 Currently a TODO, which will happen when Form1.cs is made to be less terrible.
 
 ## Translation
-An ongoing effort is being made to translate the game. Translated scripts can be found in the [tl folder](https://github.com/JuicyStandoffishMan/WhiteAlbumTranslationTools/tree/master/tl). Batch importing is not support yet.
+An ongoing effort is being made to translate the game. Translated scripts can be found in the [tl folder](/tl/). Batch importing is not support yet.
 
 ### [Video Preview](https://www.youtube.com/watch?v=9sM0kkkhB_g)
 
