@@ -144,6 +144,7 @@ namespace Texttool
 				save = true;
 			}
 
+			string slist = "";
 			cbFile.Items.Clear();
 			try
 			{
@@ -154,7 +155,9 @@ namespace Texttool
 				foreach (var v in pck_file.FileEntries)
 				{
 					cbFile.Items.Add(v.FileName);// + " (" + v.DataLength + " bytes)");
+					slist += v.FileName + "\n";
 				}
+				//Clipboard.SetText(slist);
 				//pck_file.ExtractAllFiles(Path.GetFileNameWithoutExtension(filePath));
 				cbFile.Enabled = true;
 
@@ -896,7 +899,7 @@ namespace Texttool
 					XlsxColumn.Formatted(width: 115, 6),
 				})
 				.SetDefaultStyle(headerStyle)
-				.BeginRow().Write("Status").Write("Block (DO NOT CHANGE)").Write("Speaker ID").Write("Speaker Name").Write("Japanese").Write("Edited").Write("Initial & Notes").Write("DeepL").Write("Google").Write("Other");
+				.BeginRow().Write("Status").Write("Block (DO NOT CHANGE)").Write("Speaker ID").Write("Speaker Name").Write("Japanese").Write("Edited").Write("Initial").Write("Notes").Write("Other").Write("Other");
 
 			int bid = 0;
 			string[] col_values = { "", "", "", "", "" };
