@@ -1071,6 +1071,13 @@ namespace Texttool
 
 		private void button6_Click(object sender, EventArgs e)
 		{
+			var dir = Path.GetDirectoryName(Texttool.Properties.Settings.Default.last_dir) + "\\excel\\";
+			string fname = cbFile.GetItemText(cbFile.SelectedItem);
+			if (!File.Exists(dir + fname + ".xlsx"))
+			{
+				export_excel(true, false);
+			}
+
 			export_trimmed(true);
 			import_spreadsheet();
 			btnSave.Text = "Save *";
