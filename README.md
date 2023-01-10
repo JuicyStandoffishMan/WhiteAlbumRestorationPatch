@@ -25,7 +25,7 @@ public int CharsPerLine = 0x3D;
 ### Font Extraction
 This was a manual process that extracted 'MAINTEXT.fnt' from 'Font.pck' and stripped the header, producing a raw .tex file that was then converted into MAINTEXT.png. It was then scaled down to 75%, expanded vertically to be 1512x1134, and had English characters with decoration manually added. The new font characters are available in resources/MAINTEXT.png, but the original characters are blacked out due to copyright. Dragging this file will repack it into 'Font.pck', assuming it's in the same folder where the file was dragged from.
 
-There's a [Lunar IPS patch available for it here](https://github.com/JuicyStandoffishMan/WhiteAlbumTranslationTools/blob/master/resources/Font%20patch.zip) that gets applied to Font.pck.
+Alternatively, there's a [Lunar IPS patch available for it here](https://github.com/JuicyStandoffishMan/WhiteAlbumTranslationTools/blob/master/resources/Font%20patch.zip). Just apply it to 'Data/Font.pck'.
 
 ### Batch Import/Export/Merging
 Currently a TODO, which will happen when Form1.cs is made to be less terrible.
