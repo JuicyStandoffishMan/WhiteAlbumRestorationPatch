@@ -14,6 +14,8 @@ Drag 'Data/Game/Script.sdat' into the window. Click "Export" to export an excel 
 ### Importing Scripts from the Repo
 Copy the files from the [tl folder](/tl/) into 'Data/Game/excel/trimmed' and click "Merge Trimmed" for the script you want to merge. This will merge the English columns F-J into your full scripts in the 'Data/Game/excel' folder if they exist or with a new script. Then click "Save".
 
+- Note that column **F "Edited"** is the English text that gets used when importing. The columns on the right are for aiding in translating and editing.
+
 ### Executable Patching
 Drag 'WHITE ALBUM.exe' into the window to apply the following data changes:
 ```
