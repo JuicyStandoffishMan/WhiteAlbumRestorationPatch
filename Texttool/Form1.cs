@@ -58,7 +58,25 @@ namespace Texttool
 
 			textBox2.Text = Texttool.Properties.Settings.Default.last_search;
 
+			button4.Tag = "Exports the selected script.\n\nThis will create a source .bin file, or re-load it if it already exists.";
+			button5.Tag = "Imports the selected script by loading the corresponding full excel spreadsheet and writes to the Scripts.sdat buffer.";
+			button6.Tag = "Merges the selected script with the corresponding trimmed excel spreadsheet.";
+			button3.Tag = "Trims the Japanese text from the selected script and writes it to the trimmed folder.";
+
+			button4.MouseHover += Button_Showtooltip;
+			button5.MouseHover += Button_Showtooltip;
+			button6.MouseHover += Button_Showtooltip;
+			button3.MouseHover += Button_Showtooltip;
+
 			populate(Texttool.Properties.Settings.Default.last_dir);
+		}
+		private void Button_Showtooltip(object sender, EventArgs e)
+		{
+			var button = sender as Control;
+			if (button == null || button.Tag == null || string.IsNullOrEmpty(button.Tag.ToString()))
+				return;
+
+			toolTip1.SetToolTip(button, (string)button.Tag.ToString());
 		}
 
 		private void Edit_box_LostFocus(object? sender, EventArgs e)
@@ -771,6 +789,9 @@ namespace Texttool
 			pck_file.UseBigEndian = true;
 			pck_file.ReplaceFile(cbFile.GetItemText(pck_file.FileEntries[cbFile.SelectedIndex].FileName), active_script.Compile(null));
 			pck_file.Save(Texttool.Properties.Settings.Default.last_dir);
+
+			btnSave.Text = "Save";
+			btnSave.BackColor = SystemColors.Control;
 		}
 
 		private void listBox1_DoubleClick(object sender, EventArgs e)
@@ -791,15 +812,20 @@ namespace Texttool
 		{
 			//pck_file.ExtractAllFiles(Path.GetDirectoryName(Texttool.Properties.Settings.Default.last_dir));
 
-			export_excel(true);
+			var dir = Path.GetDirectoryName(Texttool.Properties.Settings.Default.last_dir) + "\\excel\\blob";
+			Directory.CreateDirectory(dir);
+
+			export_excel(true, false);
 		}
 
-		private void export_excel(bool include_jp)
+		private void export_excel(bool include_jp, bool merge_trimmed, string[] src_col_values = null)
 		{
 			var dir = Path.GetDirectoryName(Texttool.Properties.Settings.Default.last_dir) + "\\excel\\";
+			if (!include_jp)
+				dir += "trimmed\\";
 			Directory.CreateDirectory(dir);
 			string fname = cbFile.GetItemText(cbFile.SelectedItem);
-			if (File.Exists(dir + fname + (include_jp ? "" : "_empty") + ".xlsx"))
+			if (File.Exists(dir + fname + ".xlsx") && include_jp && !merge_trimmed)
 			{
 				if (MessageBox.Show(dir + fname + ".xlsx already exists.\n\nReplace?", "Confirm File Overwrite", MessageBoxButtons.OKCancel, MessageBoxIcon.Warning) != DialogResult.OK)
 				{
@@ -808,7 +834,15 @@ namespace Texttool
 			}
 
 			if (include_jp)
-				File.WriteAllBytes(dir + fname, text_data);
+			{
+				if(!File.Exists(dir + "blob\\" + fname))
+					File.WriteAllBytes(dir + "blob\\" + fname, text_data);
+				else
+				{
+					text_data = File.ReadAllBytes(dir + "blob\\" + fname);
+					update_text();
+				}
+			}
 
 			using var stream = new FileStream(dir + fname + ".xlsx", FileMode.Create, FileAccess.Write);
 			using var writer = new XlsxWriter(stream);
@@ -850,9 +884,12 @@ namespace Texttool
 					XlsxColumn.Formatted(width: 115, 6),
 				})
 				.SetDefaultStyle(headerStyle)
-				.BeginRow().Write("Status").Write("Block (DO NOT CHANGE)").Write("Speaker ID").Write("Speaker Name").Write("Japanese").Write("English (human)").Write("English (GPT)").Write("English (DeepL)").Write("English (Google)").Write("English (Bing)");
+				.BeginRow().Write("Status").Write("Block (DO NOT CHANGE)").Write("Speaker ID").Write("Speaker Name").Write("Japanese").Write("Edited").Write("Initial & Notes").Write("DeepL").Write("Google").Write("Other");
 
 			int bid = 0;
+			string[] col_values = { "", "", "", "", "" };
+			int row = 0;
+
 			foreach (var base_block in active_script.Blocks)
 			{
 				var line = base_block as LineBlock;
@@ -862,31 +899,49 @@ namespace Texttool
 					continue;
 				}
 
+				for (int i = 0; i < 5; i++)
+				{
+					string s = "";
+					if (src_col_values != null && row * 5 + i < src_col_values.Length)
+					{
+						s = src_col_values[row * 5 + i];
+					}
+					if (s != null)
+						col_values[i] = s;
+					else
+						col_values[i] = "";
+				}
+
 				writer.BeginRow()
 					.SetDefaultStyle(text_style).Write(" ")
 					.SetDefaultStyle(text_style).Write(bid.ToString())
 					.SetDefaultStyle(text_style).Write(line.Character > 0 ? line.Character.ToString() : "")
 					.SetDefaultStyle(text_style).Write(line.CharacterName)
 					.SetDefaultStyle(text_style).Write(include_jp ? line.Text : "")
-					.SetDefaultStyle(text_style).Write()
-					.SetDefaultStyle(ml_style).Write()
-					.SetDefaultStyle(ml_style).Write()
-					.SetDefaultStyle(ml_style).Write()
-					.SetDefaultStyle(ml_style).Write();
+					.SetDefaultStyle(text_style).Write(col_values[0])
+					.SetDefaultStyle(ml_style).Write(col_values[1])
+					.SetDefaultStyle(ml_style).Write(col_values[2])
+					.SetDefaultStyle(ml_style).Write(col_values[3])
+					.SetDefaultStyle(ml_style).Write(col_values[4]);
 
+				row++;
 				bid++;
 			}
 		}
 
 		private void button5_Click(object sender, EventArgs e)
 		{
+			import_spreadsheet();
+		}
+
+		private void import_spreadsheet()
+		{
 			var dir = Path.GetDirectoryName(Texttool.Properties.Settings.Default.last_dir) + "\\excel\\";
-			Directory.CreateDirectory(dir);
 			string fname = cbFile.GetItemText(cbFile.SelectedItem);
 			using var stream = new FileStream(dir + fname + ".xlsx", FileMode.Open, FileAccess.Read, FileShare.ReadWrite);
 			using var reader = ExcelReaderFactory.CreateReader(stream);
 
-			Script new_script = new Script(File.ReadAllBytes(dir + fname));
+			Script new_script = new Script(File.ReadAllBytes(dir + "blob\\" + fname));
 
 			try
 			{
@@ -904,11 +959,11 @@ namespace Texttool
 						string name = reader.GetString(3);
 						string jp_text = reader.GetString(4);
 						string en_text = reader.GetString(5);
-						if (id == null && jp_text == null)
+						if (str_bid == null && jp_text == null)
 							continue;
 
 						LineBlock line_block = null;
-						if (id != null)
+						if (str_bid != null)
 						{
 							if (!int.TryParse(str_bid, out src_index) || src_index < 0 || src_index >= new_script.Blocks.Count)
 							{
@@ -929,11 +984,6 @@ namespace Texttool
 						if (line_block == null)
 						{
 							throw new Exception("Line block mismatch (" + str_bid + " " + jp_text + ")");
-						}
-
-						if (line_block == null)
-						{
-							throw new Exception("Line block mismatch");
 						}
 
 						if (jp_text != null && jp_text != "" && jp_text != line_block.Text)
@@ -969,11 +1019,67 @@ namespace Texttool
 				text_data = new_script.Compile(null);
 
 				update_text();
+
+				btnSave.Text = "Save *";
+				btnSave.BackColor = Color.FromArgb(255, 200, 150);
 			}
 			catch (Exception ex)
 			{
 				MessageBox.Show("Failed to import:" + ex.Message);
 			}
+		}
+
+		private void export_trimmed(bool merge)
+		{
+			try
+			{
+				var dir = Path.GetDirectoryName(Texttool.Properties.Settings.Default.last_dir) + "\\excel\\";
+				if (merge)
+					dir += "trimmed\\";
+				string fname = cbFile.GetItemText(cbFile.SelectedItem);
+				using var stream = new FileStream(dir + fname + ".xlsx", FileMode.Open, FileAccess.Read, FileShare.ReadWrite);
+				using var reader = ExcelReaderFactory.CreateReader(stream);
+
+				List<string> col_values = new List<string>();
+
+				do
+				{
+					reader.Read();
+					while (reader.Read())
+					{
+						string status = reader.GetString(0);
+						string id = reader.GetString(1);
+
+						if (id == null)
+							continue;
+
+						col_values.Add(reader.GetString(5));
+						col_values.Add(reader.GetString(6));
+						col_values.Add(reader.GetString(7));
+						col_values.Add(reader.GetString(8));
+						col_values.Add(reader.GetString(9));
+					}
+				} while (reader.NextResult());
+
+				export_excel(merge, merge, col_values.ToArray());
+			}
+			catch (Exception ex)
+			{
+				MessageBox.Show("Failed to trim file: " + ex.Message);
+			}
+		}
+
+		private void button6_Click(object sender, EventArgs e)
+		{
+			export_trimmed(true);
+			import_spreadsheet();
+			btnSave.Text = "Save *";
+			btnSave.BackColor = Color.FromArgb(255, 200, 100);
+		}
+
+		private void button3_Click_1(object sender, EventArgs e)
+		{
+			export_trimmed(false);
 		}
 	}
 

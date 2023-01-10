@@ -28,6 +28,7 @@
 		/// </summary>
 		private void InitializeComponent()
 		{
+			this.components = new System.ComponentModel.Container();
 			this.label2 = new System.Windows.Forms.Label();
 			this.comboBox1 = new System.Windows.Forms.ComboBox();
 			this.textBox1 = new System.Windows.Forms.TextBox();
@@ -36,10 +37,13 @@
 			this.cbFile = new System.Windows.Forms.ComboBox();
 			this.label1 = new System.Windows.Forms.Label();
 			this.button2 = new System.Windows.Forms.Button();
-			this.button3 = new System.Windows.Forms.Button();
+			this.btnSave = new System.Windows.Forms.Button();
 			this.listBox1 = new System.Windows.Forms.ListBox();
 			this.button4 = new System.Windows.Forms.Button();
 			this.button5 = new System.Windows.Forms.Button();
+			this.button6 = new System.Windows.Forms.Button();
+			this.toolTip1 = new System.Windows.Forms.ToolTip(this.components);
+			this.button3 = new System.Windows.Forms.Button();
 			this.SuspendLayout();
 			// 
 			// label2
@@ -57,7 +61,7 @@
 			this.comboBox1.FormattingEnabled = true;
 			this.comboBox1.Location = new System.Drawing.Point(80, 12);
 			this.comboBox1.Name = "comboBox1";
-			this.comboBox1.Size = new System.Drawing.Size(209, 23);
+			this.comboBox1.Size = new System.Drawing.Size(95, 23);
 			this.comboBox1.TabIndex = 3;
 			this.comboBox1.SelectedIndexChanged += new System.EventHandler(this.comboBox1_SelectedIndexChanged);
 			// 
@@ -66,12 +70,12 @@
 			this.textBox1.AllowDrop = true;
 			this.textBox1.BackColor = System.Drawing.SystemColors.Window;
 			this.textBox1.Font = new System.Drawing.Font("HGGothicM", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point);
-			this.textBox1.Location = new System.Drawing.Point(17, 45);
+			this.textBox1.Location = new System.Drawing.Point(17, 79);
 			this.textBox1.Multiline = true;
 			this.textBox1.Name = "textBox1";
 			this.textBox1.ReadOnly = true;
 			this.textBox1.ScrollBars = System.Windows.Forms.ScrollBars.Both;
-			this.textBox1.Size = new System.Drawing.Size(969, 582);
+			this.textBox1.Size = new System.Drawing.Size(969, 548);
 			this.textBox1.TabIndex = 4;
 			this.textBox1.WordWrap = false;
 			this.textBox1.DragDrop += new System.Windows.Forms.DragEventHandler(this.textBox1_DragDrop);
@@ -119,7 +123,7 @@
 			// 
 			// button2
 			// 
-			this.button2.Location = new System.Drawing.Point(541, 12);
+			this.button2.Location = new System.Drawing.Point(384, 12);
 			this.button2.Name = "button2";
 			this.button2.Size = new System.Drawing.Size(83, 23);
 			this.button2.TabIndex = 10;
@@ -127,15 +131,16 @@
 			this.button2.UseVisualStyleBackColor = true;
 			this.button2.Click += new System.EventHandler(this.button2_Click);
 			// 
-			// button3
+			// btnSave
 			// 
-			this.button3.Location = new System.Drawing.Point(17, 887);
-			this.button3.Name = "button3";
-			this.button3.Size = new System.Drawing.Size(139, 23);
-			this.button3.TabIndex = 11;
-			this.button3.Text = "Save";
-			this.button3.UseVisualStyleBackColor = true;
-			this.button3.Click += new System.EventHandler(this.button3_Click);
+			this.btnSave.BackColor = System.Drawing.SystemColors.Control;
+			this.btnSave.Location = new System.Drawing.Point(17, 887);
+			this.btnSave.Name = "btnSave";
+			this.btnSave.Size = new System.Drawing.Size(231, 23);
+			this.btnSave.TabIndex = 11;
+			this.btnSave.Text = "Save";
+			this.btnSave.UseVisualStyleBackColor = false;
+			this.btnSave.Click += new System.EventHandler(this.button3_Click);
 			// 
 			// listBox1
 			// 
@@ -150,23 +155,49 @@
 			// 
 			// button4
 			// 
-			this.button4.Location = new System.Drawing.Point(295, 10);
+			this.button4.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(255)))), ((int)(((byte)(128)))), ((int)(((byte)(128)))));
+			this.button4.Font = new System.Drawing.Font("Segoe UI", 9F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point);
+			this.button4.Location = new System.Drawing.Point(507, 12);
 			this.button4.Name = "button4";
-			this.button4.Size = new System.Drawing.Size(83, 23);
+			this.button4.Size = new System.Drawing.Size(129, 23);
 			this.button4.TabIndex = 13;
-			this.button4.Text = "Export";
-			this.button4.UseVisualStyleBackColor = true;
+			this.button4.Text = "Export Orig";
+			this.button4.UseVisualStyleBackColor = false;
 			this.button4.Click += new System.EventHandler(this.button4_Click);
 			// 
 			// button5
 			// 
-			this.button5.Location = new System.Drawing.Point(384, 10);
+			this.button5.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(128)))), ((int)(((byte)(255)))), ((int)(((byte)(128)))));
+			this.button5.Font = new System.Drawing.Font("Segoe UI", 9F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point);
+			this.button5.Location = new System.Drawing.Point(181, 11);
 			this.button5.Name = "button5";
-			this.button5.Size = new System.Drawing.Size(83, 23);
+			this.button5.Size = new System.Drawing.Size(149, 23);
 			this.button5.TabIndex = 14;
 			this.button5.Text = "Import";
-			this.button5.UseVisualStyleBackColor = true;
+			this.button5.UseVisualStyleBackColor = false;
 			this.button5.Click += new System.EventHandler(this.button5_Click);
+			// 
+			// button6
+			// 
+			this.button6.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(192)))), ((int)(((byte)(255)))), ((int)(((byte)(192)))));
+			this.button6.Location = new System.Drawing.Point(181, 40);
+			this.button6.Name = "button6";
+			this.button6.Size = new System.Drawing.Size(149, 23);
+			this.button6.TabIndex = 15;
+			this.button6.Text = "Merge Trimmed";
+			this.button6.UseVisualStyleBackColor = false;
+			this.button6.Click += new System.EventHandler(this.button6_Click);
+			// 
+			// button3
+			// 
+			this.button3.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(255)))), ((int)(((byte)(192)))), ((int)(((byte)(192)))));
+			this.button3.Location = new System.Drawing.Point(507, 41);
+			this.button3.Name = "button3";
+			this.button3.Size = new System.Drawing.Size(129, 23);
+			this.button3.TabIndex = 16;
+			this.button3.Text = "Export Trimmed";
+			this.button3.UseVisualStyleBackColor = false;
+			this.button3.Click += new System.EventHandler(this.button3_Click_1);
 			// 
 			// Form1
 			// 
@@ -174,10 +205,12 @@
 			this.AutoScaleDimensions = new System.Drawing.SizeF(7F, 15F);
 			this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
 			this.ClientSize = new System.Drawing.Size(998, 918);
+			this.Controls.Add(this.button3);
+			this.Controls.Add(this.button6);
 			this.Controls.Add(this.button5);
 			this.Controls.Add(this.button4);
 			this.Controls.Add(this.listBox1);
-			this.Controls.Add(this.button3);
+			this.Controls.Add(this.btnSave);
 			this.Controls.Add(this.button2);
 			this.Controls.Add(this.label1);
 			this.Controls.Add(this.cbFile);
@@ -205,9 +238,12 @@
 		private System.Windows.Forms.ComboBox cbFile;
 		private System.Windows.Forms.Label label1;
 		private System.Windows.Forms.Button button2;
-		private System.Windows.Forms.Button button3;
+		private System.Windows.Forms.Button btnSave;
 		private System.Windows.Forms.ListBox listBox1;
 		private System.Windows.Forms.Button button4;
 		private System.Windows.Forms.Button button5;
+		private System.Windows.Forms.Button button6;
+		private System.Windows.Forms.ToolTip toolTip1;
+		private System.Windows.Forms.Button button3;
 	}
 }
