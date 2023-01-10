@@ -717,6 +717,9 @@ namespace Texttool
 		private int find_index = -1;
 		private void button1_Click(object sender, EventArgs e)
 		{
+			if (pck_file == null)
+				return;
+
 			/*if (find_offsets.Count > 0)
 			{
 				find_index = (++find_index) % find_offsets.Count;
@@ -786,6 +789,9 @@ namespace Texttool
 
 		private void button3_Click(object sender, EventArgs e)
 		{
+			if (pck_file == null)
+				return;
+
 			pck_file.UseBigEndian = true;
 			pck_file.ReplaceFile(cbFile.GetItemText(pck_file.FileEntries[cbFile.SelectedIndex].FileName), active_script.Compile(null));
 			pck_file.Save(Texttool.Properties.Settings.Default.last_dir);
@@ -796,6 +802,9 @@ namespace Texttool
 
 		private void listBox1_DoubleClick(object sender, EventArgs e)
 		{
+			if (listBox1.SelectedIndex == -1)
+				return;
+
 			editing = listBox1.SelectedIndex;
 			edit_box.Visible = true;
 
@@ -821,6 +830,9 @@ namespace Texttool
 		private void export_excel(bool include_jp, bool merge_trimmed, string[] src_col_values = null)
 		{
 			var dir = Path.GetDirectoryName(Texttool.Properties.Settings.Default.last_dir) + "\\excel\\";
+			if (dir == null || pck_file == null)
+				return;
+
 			if (!include_jp)
 				dir += "trimmed\\";
 			Directory.CreateDirectory(dir);
@@ -835,7 +847,7 @@ namespace Texttool
 
 			if (include_jp)
 			{
-				if(!File.Exists(dir + "blob\\" + fname))
+				if (!File.Exists(dir + "blob\\" + fname))
 					File.WriteAllBytes(dir + "blob\\" + fname, text_data);
 				else
 				{
@@ -936,15 +948,15 @@ namespace Texttool
 
 		private void import_spreadsheet()
 		{
-			var dir = Path.GetDirectoryName(Texttool.Properties.Settings.Default.last_dir) + "\\excel\\";
-			string fname = cbFile.GetItemText(cbFile.SelectedItem);
-			using var stream = new FileStream(dir + fname + ".xlsx", FileMode.Open, FileAccess.Read, FileShare.ReadWrite);
-			using var reader = ExcelReaderFactory.CreateReader(stream);
-
-			Script new_script = new Script(File.ReadAllBytes(dir + "blob\\" + fname));
-
 			try
 			{
+				var dir = Path.GetDirectoryName(Texttool.Properties.Settings.Default.last_dir) + "\\excel\\";
+				string fname = cbFile.GetItemText(cbFile.SelectedItem);
+				using var stream = new FileStream(dir + fname + ".xlsx", FileMode.Open, FileAccess.Read, FileShare.ReadWrite);
+				using var reader = ExcelReaderFactory.CreateReader(stream);
+
+				Script new_script = new Script(File.ReadAllBytes(dir + "blob\\" + fname));
+
 				int block = 0;
 				do
 				{
@@ -1087,6 +1099,15 @@ namespace Texttool
 		private void button3_Click_1(object sender, EventArgs e)
 		{
 			export_trimmed(false);
+		}
+
+		private void textBox2_KeyDown(object sender, KeyEventArgs e)
+		{
+			if (e.KeyCode == Keys.Enter)
+			{
+				button1_Click(null, null);
+				e.Handled = true;
+			}
 		}
 	}
 

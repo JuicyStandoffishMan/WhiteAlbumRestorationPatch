@@ -91,6 +91,7 @@
 			this.textBox2.TabIndex = 6;
 			this.textBox2.WordWrap = false;
 			this.textBox2.TextChanged += new System.EventHandler(this.textBox2_TextChanged);
+			this.textBox2.KeyDown += new System.Windows.Forms.KeyEventHandler(this.textBox2_KeyDown);
 			// 
 			// button1
 			// 
@@ -98,7 +99,7 @@
 			this.button1.Name = "button1";
 			this.button1.Size = new System.Drawing.Size(75, 23);
 			this.button1.TabIndex = 7;
-			this.button1.Text = "button1";
+			this.button1.Text = "Find";
 			this.button1.UseVisualStyleBackColor = true;
 			this.button1.Click += new System.EventHandler(this.button1_Click);
 			// 
