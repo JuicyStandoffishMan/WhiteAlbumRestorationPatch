@@ -50,6 +50,7 @@ Click "Import" to load the full script into the tool and then click "Export Trim
 #### Text Processing Notes
 - Quotation marks are automatically added to dialogue (lines with an author) if they're missing.
 - Word wrapping on spaces and hyphens and textbox breaking are handled automatically, since the game's backlog crashes if lines are too long.
+- Ellipses ... are automatically replaced by their single-character counterpart ….
 
 Additionally, when pushing new spreadsheet files, be sure that:
 - None of the Japanese text is included with the committed spreadsheet.
