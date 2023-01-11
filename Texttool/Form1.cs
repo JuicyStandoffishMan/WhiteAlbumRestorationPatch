@@ -814,6 +814,7 @@ namespace Texttool
 				}
 			}
 
+			byte[] old_text = null;
 			if (include_jp)
 			{
 				if (!File.Exists(dir + "blob\\" + fname))
@@ -823,6 +824,13 @@ namespace Texttool
 					text_data = File.ReadAllBytes(dir + "blob\\" + fname);
 					update_text();
 				}
+			}
+			else
+			{
+				old_text = new byte[text_data.Length];
+				Array.Copy(text_data, old_text, old_text.Length);
+				text_data = File.ReadAllBytes(Path.GetDirectoryName(Texttool.Properties.Settings.Default.last_dir) + "\\excel\\" + "blob\\" + fname);
+				update_text();
 			}
 
 			using var stream = new FileStream(dir + fname + ".xlsx", FileMode.Create, FileAccess.Write);
@@ -915,6 +923,12 @@ namespace Texttool
 
 				row++;
 				bid++;
+			}
+
+			if (old_text != null)
+			{
+				text_data = old_text;
+				update_text();
 			}
 		}
 
