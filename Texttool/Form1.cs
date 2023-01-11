@@ -1258,6 +1258,7 @@ namespace Texttool
 		{
 			char_names[1] = "Touya";
 			char_names[2] = "Yuki";
+			char_names[3] = "Rina";
 			char_names[4] = "Haruka";
 			char_names[5] = "Misaki";
 			char_names[6] = "Female Voice";
