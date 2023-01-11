@@ -146,32 +146,27 @@ namespace Texttool
 
 			string slist = "";
 			cbFile.Items.Clear();
-			try
+
+			cbFile.Enabled = false;
+
+			pck_file = new PCKFile { UseBigEndian = true };
+			pck_file.Load(path, false);
+			foreach (var v in pck_file.FileEntries)
 			{
-				cbFile.Enabled = false;
-
-				pck_file = new PCKFile { UseBigEndian = true };
-				pck_file.Load(path, false);
-				foreach (var v in pck_file.FileEntries)
-				{
-					cbFile.Items.Add(v.FileName);// + " (" + v.DataLength + " bytes)");
-					slist += v.FileName + "\n";
-				}
-				//Clipboard.SetText(slist);
-				//pck_file.ExtractAllFiles(Path.GetFileNameWithoutExtension(filePath));
-				cbFile.Enabled = true;
-
-				int index = 0;
-				cbFile.SelectedIndex = Texttool.Properties.Settings.Default.last_index;
-
-				button1.Text = "Find";
-
-				this.Text = Path.GetFileName(path) + " - White Album script viewer";
+				cbFile.Items.Add(v.FileName);// + " (" + v.DataLength + " bytes)");
+				slist += v.FileName + "\n";
 			}
-			catch
-			{
+			//Clipboard.SetText(slist);
+			//pck_file.ExtractAllFiles(Path.GetFileNameWithoutExtension(filePath));
+			cbFile.Enabled = true;
 
-			}
+			int index = 0;
+			cbFile.SelectedIndex = Texttool.Properties.Settings.Default.last_index;
+
+			button1.Text = "Find";
+
+			this.Text = Path.GetFileName(path) + " - White Album script viewer";
+
 
 			if (save)
 			{
@@ -231,6 +226,21 @@ namespace Texttool
 				else if (c == ',')
 				{
 					c = '，';
+				}
+				else if (c == '<')
+				{
+					// Next character should be R, c, or W
+					sb.Append(c);
+					sb.Append(s[i + 1]);
+
+					if (s[i + 1] == 'c')
+					{
+						// ASCII color value
+						sb.Append(s[i + 2]);
+						i++;
+					}
+					i++;
+					continue;
 				}
 				else if (c == ' ' || c == '　')
 				{
@@ -539,120 +549,8 @@ namespace Texttool
 		{
 			var encoding = System.Text.CodePagesEncodingProvider.Instance.GetEncoding("Shift-JIS");
 
-			string[] char_names =
-			{
-				"",
-				"Touya",
-				"Yuki"
-			};
-
-			string sum = "";
 			int off = 0;
 			List<byte> bstring = new List<byte>();
-			// Start by finding 0x0F
-			try
-			{
-				while (off < text_data.Length)
-				{
-					if (text_data[off] != 0xF)
-					{
-						off++;
-						continue;
-					}
-
-					bstring.Clear();
-
-					string s = "";
-					int character = text_data[off - 1];
-					for (; off + 2 < text_data.Length; off++)
-					{
-						byte b1 = text_data[off];
-						byte b2 = text_data[off + 1];
-						if (b1 == 0 && (b2 >= 0x81))
-						{
-							off += 1;
-							break;
-						}
-						else if (b2 == 0xF && b1 != character)
-							character = b1;
-					}
-
-					string character_name = "";
-
-					if (off + 1 >= text_data.Length)
-						break;
-
-					int start = off;
-					if (start == 0x643)
-					{
-
-					}
-
-					for (; off + 4 < text_data.Length; off++)
-					{
-						byte b1 = text_data[off];
-						byte b2 = text_data[off + 1];
-						byte b3 = text_data[off + 2];
-						byte b4 = text_data[off + 3];
-
-						if (b1 == 0x5C && b2 == 0x6B)
-						{
-							bstring.Add(b1);
-							bstring.Add(b2);
-							off += 11;
-							continue;
-						}
-						if (b1 == 0 && b3 != 0x41 && b3 != 0x42)
-						{
-							bstring.Clear();
-							off += 2;
-							continue;
-						}
-						if (b1 == 0 && (b3 == 0x41 || b3 == 0x42))
-						{
-							break;
-						}
-
-						bstring.Add(b1);
-					}
-
-					if (bstring.Count <= 1)
-						continue;
-
-					if (character == 255)
-						character = 0;
-
-					int end = off;
-					//off += 1;
-					if (character_name == "")
-					{
-						if (character != 0 && character < char_names.Length && char_names[character] != "")
-							s = char_names[character] + ":";
-						else if (character > 0)
-							s += character.ToString() + ":";
-					}
-					else
-						s += character_name + ":";
-
-					s += encoding.GetString(bstring.ToArray()) + "\r\n";
-					s = s.Replace("\\k\\n", "\r\n").Replace("\\k", "\r\n").Replace("\\n", "\r\n");
-					sum += s;
-				}
-			}
-			catch (Exception ex) { sum += "Exception: " + ex.Message; }
-
-			if (off + 10 < text_data.Length)
-			{
-				sum += "Unexpected EOF";
-			}
-			else
-			{
-				sum += "File complete.";
-			}
-
-			textBox1.Text = sum;
-
-			textBox2_TextChanged(null, null);
 
 			active_script = new Script(text_data);
 			try
@@ -663,6 +561,8 @@ namespace Texttool
 			{
 				MessageBox.Show(ex.Message);
 			}
+
+			string sum = "";
 			listBox1.Items.Clear();
 			block_map.Clear();
 			int bi = 0;
@@ -676,8 +576,17 @@ namespace Texttool
 				}
 
 				block_map.Add(bi++);
-				listBox1.Items.Add(line.Text.Replace("\\n", "<ｂｒｅａｋ>"));
+
+				string s = "";
+				if (line.IsDialogue)
+					s += line.CharacterName + ": ";
+				s += line.Text;
+				listBox1.Items.Add(s.Replace("\\n", "<ｂｒｅａｋ>"));
+				s = s.Replace("\\n", "\r\n");
+				sum += s + "\r\n";
 			}
+
+			textBox1.Text = sum;
 		}
 
 		private void numericUpDown1_ValueChanged(object sender, EventArgs e)
@@ -930,7 +839,7 @@ namespace Texttool
 				writer.BeginRow()
 					.SetDefaultStyle(text_style).Write(" ")
 					.SetDefaultStyle(text_style).Write(bid.ToString())
-					.SetDefaultStyle(text_style).Write(line.Character > 0 ? line.Character.ToString() : "")
+					.SetDefaultStyle(text_style).Write((line.CharacterValue.b4 != 0 ? line.CharacterValue.b4.ToString() : ""))
 					.SetDefaultStyle(text_style).Write(line.CharacterName)
 					.SetDefaultStyle(text_style).Write(include_jp ? line.Text : "")
 					.SetDefaultStyle(text_style).Write(col_values[0])
@@ -1006,9 +915,12 @@ namespace Texttool
 							throw new Exception("JP text mismatch");
 						}
 
+						if (string.IsNullOrEmpty(en_text))
+							en_text = reader.GetString(6);
+
 						if (!string.IsNullOrEmpty(en_text))
 						{
-							if (line_block.Character != 0 && line_block.Character != 255)
+							if (line_block.IsDialogue)
 							{
 								if (!en_text.StartsWith("\"") && !en_text.StartsWith("″"))
 								{
@@ -1129,11 +1041,53 @@ namespace Texttool
 		}
 	}
 
+	public struct CharacterValue
+	{
+		public byte b0;
+		public byte b1;
+		public byte b2;
+		public byte b3;
+		public byte b4;
+	}
+
 	public class LineBlock : Block
 	{
-		public int Character;
-		public string CharacterName = "";
+		public CharacterValue CharacterValue = new CharacterValue();
+		public string CharacterName
+		{
+			get
+			{
+				if (CharacterValue.b2 == 1)
+				{
+					return Script.GetCharName(CharacterValue.b4);
+				}
+				else
+				{
+					string s = "";
+					int v = CharacterValue.b3 * 0x100 + CharacterValue.b4;
+					for (int i = 0; i < 16; i++)
+					{
+						if ((v & (1 << i)) != 0)
+						{
+							if (s != "")
+								s += " & ";
+							s += Script.GetCharName(i + 1);
+						}
+					}
+
+					return s;
+				}
+			}
+		}
 		public string Text = "";
+
+		public bool IsDialogue
+		{
+			get
+			{
+				return !(CharacterValue.b0 == 0 && CharacterValue.b1 == 0 && CharacterValue.b2 == 0 && CharacterValue.b3 == 0 && CharacterValue.b4 == 0);
+			}
+		}
 
 		public Encoding encoding;
 
@@ -1158,7 +1112,15 @@ namespace Texttool
 					breakblock.Add(0);
 					breakblock.Add(0);
 					breakblock.Add(0x41);
-					breakblock.Add((byte)Character);
+					if (IsDialogue)
+					{
+						breakblock.Add(CharacterValue.b0);
+						breakblock.Add(CharacterValue.b1);
+						breakblock.Add(CharacterValue.b2);
+						breakblock.Add(CharacterValue.b3);
+						breakblock.Add(CharacterValue.b4);
+					}
+					breakblock.Add(0);
 					breakblock.Add(0xF);
 					breakblock.Add(0);
 					breakblock.Add(0);
@@ -1180,28 +1142,50 @@ namespace Texttool
 	{
 		public List<Block> Blocks = new List<Block>();
 
+		public static string[] char_names = new string[64];
+		public static string GetCharName(int v)
+		{
+			if (v < 0 || v >= char_names.Length || string.IsNullOrEmpty(char_names[v]))
+				return v.ToString();
+			return char_names[v];
+		}
+
+		static Script()
+		{
+			char_names[1] = "Touya";
+			char_names[2] = "Yuki";
+			char_names[4] = "Haruka";
+			char_names[5] = "Misaki";
+			char_names[6] = "Female Voice";
+			char_names[7] = "Male Voice";
+			char_names[9] = "Akira";
+		}
+
 		public byte[] Compile(byte[] compare)
 		{
 			List<byte> output = new List<byte>();
+			List<byte> lo = new List<byte>();
+			int off = 0;
 			foreach (var b in Blocks)
 			{
-				b.Write(output);
-			}
+				lo.Clear();
+				b.Write(lo);
 
-			if (compare != null)
-			{
-				if (output.Count != compare.Length)
+				if (compare != null)
 				{
-					throw new Exception("Size mismatch (" + output.Count + " vs " + compare.Length + " expected)");
-				}
-
-				for (int i = 0; i < output.Count; i++)
-				{
-					if (output[i] != compare[i])
+					for (int i = 0; i < lo.Count; i++)
 					{
-						throw new Exception("Mismatch at " + i);
+						byte b1 = lo[i];
+						byte b2 = compare[i + off];
+						if (lo[i] != compare[i + off])
+						{
+							throw new Exception("Mismatch at " + i + off);
+						}
 					}
 				}
+
+				off += lo.Count;
+				output.AddRange(lo);
 			}
 
 			return output.ToArray();
@@ -1216,14 +1200,6 @@ namespace Texttool
 			}
 			var encoding = System.Text.CodePagesEncodingProvider.Instance.GetEncoding("Shift-JIS");
 
-
-			string[] char_names =
-			{
-				"",
-				"Touya",
-				"Yuki"
-			};
-
 			int off = 0;
 			List<byte> bstring = new List<byte>();
 			List<Block> blocks = new List<Block>();
@@ -1232,33 +1208,79 @@ namespace Texttool
 			{
 				while (off < text_data.Length)
 				{
-					if (text_data[off] != 0xF)
+					bstring.Clear();
+					CharacterValue character_value = new CharacterValue();
+					bool string_start = false;
+					int counter_id = 0;
+
+					byte opcode = text_data[off++];
+					if (opcode == 0x22)
 					{
 						off++;
-						continue;
-					}
+						if (text_data[off - 1] == 0)
+						{
+							// No character
+						}
+						else if (text_data[off - 1] == 1)
+						{
+							character_value.b0 = text_data[off++];
+							character_value.b1 = text_data[off++];
+							character_value.b2 = text_data[off++];
+							character_value.b3 = text_data[off++];
+							character_value.b4 = text_data[off++];
+						}
+						else
+						{
+							// Unknown...
+							continue;
+						}
 
-					bstring.Clear();
+						while (off < text_data.Length)
+						{
+							opcode = text_data[off++];
+							if (opcode == 0xF)
+							{
+								off++;
+								if (text_data[off] == 0)
+								{
+									off++;
+									counter_id |= text_data[off++] << 8;
+									counter_id |= text_data[off++] << 0;
+								}
+							}
+							else if (opcode >= 0x80 && text_data[off - 2] == 0)
+							{
+								off--;
+								string_start = true;
+								break;
+							}
+						}
+					}
+					else if (opcode == 0xF)
+					{
+						off++;
+						if (text_data[off] == 0)
+						{
+							off++;
+							counter_id |= text_data[off++] << 8;
+							counter_id |= text_data[off++] << 0;
+						}
+
+						while (off < text_data.Length)
+						{
+							opcode = text_data[off++];
+							if (opcode >= 0x80 && text_data[off - 2] == 0)
+							{
+								off--;
+								string_start = true;
+								break;
+							}
+						}
+					}
 
 					string s = "";
-					int character = text_data[off - 1];
-					for (; off + 2 < text_data.Length; off++)
-					{
-						byte b1 = text_data[off];
-						byte b2 = text_data[off + 1];
-						if (b1 == 0 && ((b2 >= 0x81) || (b2 >= 0x20 && b2 <= 0x7D)))
-						{
-							off += 1;
-							break;
-						}
-						else if (b2 == 0xF && b1 != character)
-							character = b1;
-					}
-
-					string character_name = "";
-
-					if (off + 1 >= text_data.Length)
-						break;
+					if (!string_start)
+						continue;
 
 					int start = off;
 					for (; off + 4 < text_data.Length; off++)
@@ -1273,7 +1295,7 @@ namespace Texttool
 							if (bstring.Count > 0)
 							{
 								LineBlock sub_block = new LineBlock(encoding, start);
-								sub_block.Character = character;
+								sub_block.CharacterValue = character_value;
 								sub_block.Text = encoding.GetString(bstring.ToArray());
 								blocks.Add(sub_block);
 							}
@@ -1283,6 +1305,42 @@ namespace Texttool
 							off += 11;
 
 							continue;
+						}
+						else if (b1 == '<')
+						{
+							if (b2 == 'R')
+							{
+								// R is used to add Furigana to kanji and works like <R把手|とって>
+								// Leave it in
+							}
+							else if (b2 == 'c')
+							{
+								// c is used for color, like c4
+								// Leave it in
+							}
+							else
+							{
+								if (bstring.Count > 0)
+								{
+									LineBlock sub_block = new LineBlock(encoding, start);
+									sub_block.CharacterValue = character_value;
+									sub_block.Text = encoding.GetString(bstring.ToArray());
+									blocks.Add(sub_block);
+								}
+
+								else if (b2 == 'W')
+									off += 3;
+								else if (bstring.Count > 0)
+								{
+
+									MessageBox.Show("Unknown < escape code: " + (char)b2);
+									throw new Exception("Unknown < escape code: " + (char)b2);
+								}
+
+								bstring.Clear();
+
+								continue;
+							}
 						}
 						else if (b1 == 0x5C && b2 == 0x6E)
 						{
@@ -1319,25 +1377,9 @@ namespace Texttool
 					if (bstring.Count <= 1)
 						continue;
 
-					if (character == 255)
-						character = 0;
-
-					int end = off;
-					if (character_name == "")
-					{
-						if (character != 0 && character < char_names.Length && char_names[character] != "")
-							s = char_names[character] + ":";
-						else if (character > 0)
-							s += character.ToString() + ":";
-					}
-					else
-						s += character_name + ":";
-
 					LineBlock l = new LineBlock(encoding, start);
-					l.Character = character;
-					if (character >= 0 && character < char_names.Length)
-						l.CharacterName = char_names[character];
-					l.Text = encoding.GetString(bstring.ToArray());//.Replace("\\n", "<ｂｒｅａｋ>");
+					l.CharacterValue = character_value;
+					l.Text = encoding.GetString(bstring.ToArray());
 					blocks.Add(l);
 				}
 			}
