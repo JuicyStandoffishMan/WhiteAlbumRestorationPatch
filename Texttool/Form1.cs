@@ -840,15 +840,21 @@ namespace Texttool
 				XlsxBorder.Around(new XlsxBorder.Line(Color.Black, XlsxBorder.Style.Thin)),
 				XlsxStyle.Default.NumberFormat,
 				XlsxAlignment.Default);
-			var en_style = new XlsxStyle(
-				new XlsxFont("Segoe UI", 10, Color.Black),
-				new XlsxFill(Color.FromArgb(255, 255, 255)),
+			var text_style2 = new XlsxStyle(
+				new XlsxFont("Microsoft GothicNeo", 10, Color.Black),
+				new XlsxFill(Color.FromArgb(230, 230, 230)),
 				XlsxBorder.Around(new XlsxBorder.Line(Color.Black, XlsxBorder.Style.Thin)),
 				XlsxStyle.Default.NumberFormat,
 				XlsxAlignment.Default);
 			var ml_style = new XlsxStyle(
 				new XlsxFont("Segoe UI", 10, Color.Black),
 				new XlsxFill(Color.FromArgb(220, 220, 220)),
+				XlsxBorder.Around(new XlsxBorder.Line(Color.Black, XlsxBorder.Style.Thin)),
+				XlsxStyle.Default.NumberFormat,
+				XlsxAlignment.Default);
+			var ml_style2 = new XlsxStyle(
+				new XlsxFont("Segoe UI", 10, Color.Black),
+				new XlsxFill(Color.FromArgb(190, 190, 190)),
 				XlsxBorder.Around(new XlsxBorder.Line(Color.Black, XlsxBorder.Style.Thin)),
 				XlsxStyle.Default.NumberFormat,
 				XlsxAlignment.Default);
@@ -893,17 +899,19 @@ namespace Texttool
 						col_values[i] = "";
 				}
 
+				var s1 = (row % 2 == 0 ? text_style : text_style2);
+				var s2 = (row % 2 == 0 ? ml_style : ml_style2);
 				writer.BeginRow()
-					.SetDefaultStyle(text_style).Write(" ")
-					.SetDefaultStyle(text_style).Write(bid.ToString())
-					.SetDefaultStyle(text_style).Write((line.CharacterValue.b4 != 0 ? line.CharacterValue.b4.ToString() : ""))
-					.SetDefaultStyle(text_style).Write(line.CharacterName)
-					.SetDefaultStyle(text_style).Write(include_jp ? line.Text : "")
-					.SetDefaultStyle(text_style).Write(col_values[0])
-					.SetDefaultStyle(ml_style).Write(col_values[1])
-					.SetDefaultStyle(ml_style).Write(col_values[2])
-					.SetDefaultStyle(ml_style).Write(col_values[3])
-					.SetDefaultStyle(ml_style).Write(col_values[4]);
+					.SetDefaultStyle(s1).Write(" ")
+					.SetDefaultStyle(s1).Write(bid.ToString())
+					.SetDefaultStyle(s1).Write((line.CharacterValue.b4 != 0 ? line.CharacterValue.b4.ToString() : ""))
+					.SetDefaultStyle(s1).Write(line.CharacterName)
+					.SetDefaultStyle(s1).Write(include_jp ? line.Text : "")
+					.SetDefaultStyle(s1).Write(col_values[0])
+					.SetDefaultStyle(s2).Write(col_values[1])
+					.SetDefaultStyle(s2).Write(col_values[2])
+					.SetDefaultStyle(s2).Write(col_values[3])
+					.SetDefaultStyle(s2).Write(col_values[4]);
 
 				row++;
 				bid++;
