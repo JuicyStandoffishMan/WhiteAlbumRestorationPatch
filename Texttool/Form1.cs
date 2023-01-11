@@ -989,6 +989,10 @@ namespace Texttool
 								}
 							}
 							line_block.Text = filter_string(en_text);
+							if(jp_text.EndsWith("<pause>") && !line_block.Text.EndsWith("<pause>"))
+							{
+								line_block.Text += "<pause>";
+							}
 						}
 						else
 						{
@@ -1089,7 +1093,7 @@ namespace Texttool
 				return;
 
 			string[] lines = s.Replace("\\r", "").Split('\n');
-			s = "Translate this from Japanese to English:\r\n";
+			s = "Translate this from Japanese to English in present-tense so it sounds natural:\r\n";
 			for (int i = 0; i < lines.Length; i++)
 			{
 				s += (i + 1).ToString() + ") " + lines[i];
