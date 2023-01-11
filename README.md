@@ -65,6 +65,8 @@ Additionally, when pushing new spreadsheet files, be sure that:
 - Quotation marks are automatically added to dialogue (lines with an author) if they're missing.
 - Word wrapping on spaces and hyphens and textbox breaking are handled automatically, since the game's backlog crashes if lines are too long.
 - Ellipses ... are automatically replaced by their single-character counterpart ….
+- To add Furigana or other tiny text above words, use `<Rbig|small>`
+- To color certain text, use `<c4Yellow text>`
 
 ## Licenses
 - [Scarlet](https://github.com/xdanieldzd/Scarlet/blob/master/LICENSE.md)
