@@ -12,7 +12,7 @@ Visual Studio 2022 with .NET Core 6.
 Drag 'Data/Game/Script.sdat' into the window. Click "Export" to export an excel spreadsheet for translating, and "Import" to re-import it. Click save to update Script.sdat.
 
 ### Modifying and Importing Scripts
-The tool will apply the script located in the 'Data/Game/excel' folder. Note that column **F "Edited"** is the English text that gets used when importing. The columns on the right are for aiding in translating and editing. When finished editing, click "Import" for the script and then "Save" to update the Scripts.sdat file and then reload the game.
+The tool will apply the script located in the 'Data/Game/excel' folder. Note that column **F "Edited"** is the English text that gets used when importing, but if it's blank, then column **G Initial** will be used instead. The columns on the right are for aiding in translating and editing. When finished editing, click "Import" for the script and then "Save" to update the Scripts.sdat file and then reload the game.
 
 To use the translated scripts that are located in the [tl folder of this repo](/tl/), copy its files into your 'Data/Game/excel/trimmed' folder and click "Merge Trimmed" for each script you want to merge. This will merge the English columns F-J into your full scripts in the 'Data/Game/excel' folder if they exist or with a new script. Then click "Save".
 
@@ -67,6 +67,7 @@ Additionally, when pushing new spreadsheet files, be sure that:
 - Ellipses ... are automatically replaced by their single-character counterpart ….
 - To add Furigana or other tiny text above words, use `<Rbig|small>`
 - To color certain text, use `<c4Yellow text>`
+- The original Japanese text may contain <pause> characters that requires the player to manually advance the text, but not put the text on a new line. These are inserted automatically at the end of the line to match the Japanese version.
 
 ## Licenses
 - [Scarlet](https://github.com/xdanieldzd/Scarlet/blob/master/LICENSE.md)
