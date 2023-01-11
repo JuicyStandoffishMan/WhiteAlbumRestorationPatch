@@ -282,7 +282,7 @@ namespace Texttool
 						ind -= i + 1;
 					if (ind + line_count >= CharsPerLine - 3)
 					{
-						if (char_count >= 150)
+						if (char_count >= 100)
 						{
 							sb.Append("<ｋａｅｒｂ>");
 							char_count = 0;
@@ -848,7 +848,7 @@ namespace Texttool
 				XlsxAlignment.Default);
 			var ml_style = new XlsxStyle(
 				new XlsxFont("Segoe UI", 10, Color.Black),
-				new XlsxFill(Color.FromArgb(200, 200, 200)),
+				new XlsxFill(Color.FromArgb(220, 220, 220)),
 				XlsxBorder.Around(new XlsxBorder.Line(Color.Black, XlsxBorder.Style.Thin)),
 				XlsxStyle.Default.NumberFormat,
 				XlsxAlignment.Default);
@@ -1095,6 +1095,7 @@ namespace Texttool
 				s += (i + 1).ToString() + ") " + lines[i];
 			}
 			s += "\r\n";
+			s = s.Replace("<pause>", "");
 			Clipboard.SetText(s);
 			textBox1.Focus();
 		}
