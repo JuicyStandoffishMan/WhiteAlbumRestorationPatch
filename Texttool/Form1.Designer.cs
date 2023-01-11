@@ -44,6 +44,7 @@
 			this.button6 = new System.Windows.Forms.Button();
 			this.toolTip1 = new System.Windows.Forms.ToolTip(this.components);
 			this.button3 = new System.Windows.Forms.Button();
+			this.button7 = new System.Windows.Forms.Button();
 			this.SuspendLayout();
 			// 
 			// label2
@@ -75,7 +76,7 @@
 			this.textBox1.Name = "textBox1";
 			this.textBox1.ReadOnly = true;
 			this.textBox1.ScrollBars = System.Windows.Forms.ScrollBars.Both;
-			this.textBox1.Size = new System.Drawing.Size(969, 548);
+			this.textBox1.Size = new System.Drawing.Size(969, 510);
 			this.textBox1.TabIndex = 4;
 			this.textBox1.WordWrap = false;
 			this.textBox1.DragDrop += new System.Windows.Forms.DragEventHandler(this.textBox1_DragDrop);
@@ -200,12 +201,24 @@
 			this.button3.UseVisualStyleBackColor = false;
 			this.button3.Click += new System.EventHandler(this.button3_Click_1);
 			// 
+			// button7
+			// 
+			this.button7.BackColor = System.Drawing.SystemColors.Control;
+			this.button7.Location = new System.Drawing.Point(17, 595);
+			this.button7.Name = "button7";
+			this.button7.Size = new System.Drawing.Size(967, 32);
+			this.button7.TabIndex = 17;
+			this.button7.Text = "Copy Prompt";
+			this.button7.UseVisualStyleBackColor = false;
+			this.button7.Click += new System.EventHandler(this.button7_Click);
+			// 
 			// Form1
 			// 
 			this.AllowDrop = true;
 			this.AutoScaleDimensions = new System.Drawing.SizeF(7F, 15F);
 			this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
 			this.ClientSize = new System.Drawing.Size(998, 918);
+			this.Controls.Add(this.button7);
 			this.Controls.Add(this.button3);
 			this.Controls.Add(this.button6);
 			this.Controls.Add(this.button5);
@@ -246,5 +259,6 @@
 		private System.Windows.Forms.Button button6;
 		private System.Windows.Forms.ToolTip toolTip1;
 		private System.Windows.Forms.Button button3;
+		private System.Windows.Forms.Button button7;
 	}
 }

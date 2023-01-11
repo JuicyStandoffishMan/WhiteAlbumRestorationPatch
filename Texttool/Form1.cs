@@ -148,6 +148,9 @@ namespace Texttool
 			cbFile.Items.Clear();
 
 			cbFile.Enabled = false;
+			last_filter_line_count = 0;
+			last_filter_char_count = 0;
+			last_filter_string = "";
 
 			pck_file = new PCKFile { UseBigEndian = true };
 			pck_file.Load(path, false);
@@ -174,14 +177,32 @@ namespace Texttool
 			}
 		}
 
+
+		private int last_filter_line_count = 0;
+		private int last_filter_char_count = 0;
+		private string last_filter_string = "";
 		private string filter_string(string s)
 		{
 			StringBuilder sb = new StringBuilder();
 			int line_count = 0;
 			int char_count = 0;
+
+			if (last_filter_string.EndsWith("<pause>"))
+			{
+				line_count = last_filter_line_count;
+				char_count = last_filter_char_count;
+			}
+
 			for (int i = 0; i < s.Length; i++)
 			{
 				char c = s[i];
+
+				if (s.IndexOf("<pause>", i) == i)
+				{
+					i += 6;
+					sb.Append("<pause>");
+					continue;
+				}
 
 				if (c >= '0' && c <= '9')
 				{
@@ -227,6 +248,14 @@ namespace Texttool
 				{
 					c = '，';
 				}
+				else if (c == '(')
+				{
+					c = '（';
+				}
+				else if (c == ')')
+				{
+					c = '）';
+				}
 				else if (c == '<')
 				{
 					// Next character should be R, c, or W
@@ -251,7 +280,7 @@ namespace Texttool
 						ind = s.Length - (i + 1);
 					else
 						ind -= i + 1;
-					if (ind + line_count > CharsPerLine - 3)
+					if (ind + line_count >= CharsPerLine - 3)
 					{
 						if (char_count >= 150)
 						{
@@ -278,6 +307,10 @@ namespace Texttool
 			}
 			sb = sb.Replace("...", "…");
 			sb = sb.Replace("．．．", "…");
+
+			last_filter_char_count = char_count;
+			last_filter_line_count = line_count;
+			last_filter_string = s;
 
 			return sb.ToString();
 		}
@@ -409,6 +442,14 @@ namespace Texttool
 					{
 						c = 'ー';
 					}
+					else if (c == '(')
+					{
+						c = '（';
+					}
+					else if (c == ')')
+					{
+						c = '）';
+					}
 					else if (c == (char)127)
 					{
 						c = '…';
@@ -501,6 +542,14 @@ namespace Texttool
 					{
 						c = 'ー';
 					}
+					else if (c == '(')
+					{
+						c = '（';
+					}
+					else if (c == ')')
+					{
+						c = '）';
+					}
 					else if (c == 127)
 					{
 						c = '…';
@@ -551,6 +600,10 @@ namespace Texttool
 
 			int off = 0;
 			List<byte> bstring = new List<byte>();
+
+			last_filter_line_count = 0;
+			last_filter_char_count = 0;
+			last_filter_string = "";
 
 			active_script = new Script(text_data);
 			try
@@ -703,6 +756,10 @@ namespace Texttool
 		{
 			if (pck_file == null)
 				return;
+
+			last_filter_line_count = 0;
+			last_filter_char_count = 0;
+			last_filter_string = "";
 
 			pck_file.UseBigEndian = true;
 			pck_file.ReplaceFile(cbFile.GetItemText(pck_file.FileEntries[cbFile.SelectedIndex].FileName), active_script.Compile(null));
@@ -910,7 +967,7 @@ namespace Texttool
 							throw new Exception("Line block mismatch (" + str_bid + " " + jp_text + ")");
 						}
 
-						if (jp_text != null && jp_text != "" && jp_text != line_block.Text)
+						if (jp_text != null && jp_text != "" && jp_text.Replace("<pause>", "") != line_block.Text.Replace("<pause>", ""))
 						{
 							throw new Exception("JP text mismatch");
 						}
@@ -1024,6 +1081,23 @@ namespace Texttool
 				e.Handled = true;
 			}
 		}
+
+		private void button7_Click(object sender, EventArgs e)
+		{
+			string s = textBox1.SelectedText;
+			if (string.IsNullOrEmpty(s))
+				return;
+
+			string[] lines = s.Replace("\\r", "").Split('\n');
+			s = "Translate this from Japanese to English:\r\n";
+			for (int i = 0; i < lines.Length; i++)
+			{
+				s += (i + 1).ToString() + ") " + lines[i];
+			}
+			s += "\r\n";
+			Clipboard.SetText(s);
+			textBox1.Focus();
+		}
 	}
 
 	public abstract class Block
@@ -1104,6 +1178,7 @@ namespace Texttool
 			string text = Text;
 			text = text.Replace("\n", "\\n");
 			text = text.Replace("<ｂｒｅａｋ>", "\\n");
+			text = text.Replace("<pause>", "");
 			if (text.IndexOf("<ｋａｅｒｂ>") != -1)
 			{
 				if (breakblock == null)
@@ -1112,15 +1187,17 @@ namespace Texttool
 					breakblock.Add(0);
 					breakblock.Add(0);
 					breakblock.Add(0x41);
+					breakblock.Add(0);
 					if (IsDialogue)
 					{
+						breakblock.Add(0x22);
+						breakblock.Add(0x01);
 						breakblock.Add(CharacterValue.b0);
 						breakblock.Add(CharacterValue.b1);
 						breakblock.Add(CharacterValue.b2);
 						breakblock.Add(CharacterValue.b3);
 						breakblock.Add(CharacterValue.b4);
 					}
-					breakblock.Add(0);
 					breakblock.Add(0xF);
 					breakblock.Add(0);
 					breakblock.Add(0);
@@ -1283,6 +1360,7 @@ namespace Texttool
 						continue;
 
 					int start = off;
+					LineBlock last_line_block = null;
 					for (; off + 4 < text_data.Length; off++)
 					{
 						byte b1 = text_data[off];
@@ -1296,7 +1374,8 @@ namespace Texttool
 							{
 								LineBlock sub_block = new LineBlock(encoding, start);
 								sub_block.CharacterValue = character_value;
-								sub_block.Text = encoding.GetString(bstring.ToArray());
+								sub_block.Text = encoding.GetString(bstring.ToArray()) + "<pause>";
+								last_line_block = sub_block;
 								blocks.Add(sub_block);
 							}
 
@@ -1353,6 +1432,11 @@ namespace Texttool
 
 								bstring.Clear();*/
 
+								if (last_line_block != null && last_line_block.Text.EndsWith("<pause>"))
+								{
+									last_line_block.Text = last_line_block.Text.Substring(0, last_line_block.Text.Length - 7);
+								}
+
 								off++;
 
 								continue;
@@ -1380,6 +1464,7 @@ namespace Texttool
 					LineBlock l = new LineBlock(encoding, start);
 					l.CharacterValue = character_value;
 					l.Text = encoding.GetString(bstring.ToArray());
+					last_line_block = l;
 					blocks.Add(l);
 				}
 			}
@@ -1406,7 +1491,7 @@ namespace Texttool
 				{
 					b.Data = new byte[blocks[next_block].Start - off];
 					Buffer.BlockCopy(text_data, off, b.Data, 0, b.Data.Length);
-					off += ((LineBlock)blocks[next_block]).encoding.GetBytes(((LineBlock)blocks[next_block]).Text).Length;
+					off += ((LineBlock)blocks[next_block]).encoding.GetBytes(((LineBlock)blocks[next_block]).Text.Replace("<pause>", "")).Length;
 					next_block++;
 				}
 				else
