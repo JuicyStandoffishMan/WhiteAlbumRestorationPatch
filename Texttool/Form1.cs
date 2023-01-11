@@ -1353,7 +1353,7 @@ namespace Texttool
 									counter_id |= text_data[off++] << 0;
 								}
 							}
-							else if (opcode >= 0x80 && text_data[off - 2] == 0)
+							else if ((opcode >= 0x80 || (opcode == 0x3C && (text_data[off] == 0x63 || text_data[off] == 0x52 || text_data[off] == 0x57))) && text_data[off - 2] == 0)
 							{
 								off--;
 								string_start = true;
@@ -1374,7 +1374,7 @@ namespace Texttool
 						while (off < text_data.Length)
 						{
 							opcode = text_data[off++];
-							if (opcode >= 0x80 && text_data[off - 2] == 0)
+							if ((opcode >= 0x80 || (opcode == 0x3C && (text_data[off] == 0x63 || text_data[off] == 0x52 || text_data[off] == 0x57))) && text_data[off - 2] == 0)
 							{
 								off--;
 								string_start = true;
