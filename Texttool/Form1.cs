@@ -17,6 +17,8 @@ using SharpCompress.Common;
 using static System.Windows.Forms.VisualStyles.VisualStyleElement;
 using LargeXlsx;
 using ExcelDataReader;
+using System.Runtime.ConstrainedExecution;
+using System.Security.Cryptography;
 
 namespace Texttool
 {
@@ -635,7 +637,7 @@ namespace Texttool
 					s += line.CharacterName + ": ";
 				s += line.Text;
 				listBox1.Items.Add(s.Replace("\\n", "<ｂｒｅａｋ>"));
-				s = s.Replace("\\n", "\r\n");
+				s = s.Replace("\\n", " ");
 				sum += s + "\r\n";
 			}
 
@@ -914,7 +916,7 @@ namespace Texttool
 					.SetDefaultStyle(s1).Write(bid.ToString())
 					.SetDefaultStyle(s1).Write((line.CharacterValue.b4 != 0 ? line.CharacterValue.b4.ToString() : ""))
 					.SetDefaultStyle(s1).Write(line.CharacterName)
-					.SetDefaultStyle(s1).Write(include_jp ? line.Text : "")
+					.SetDefaultStyle(s1).Write(include_jp ? line.Text.Replace("\\n", "") : "")
 					.SetDefaultStyle(s1).Write(col_values[0])
 					.SetDefaultStyle(s2).Write(col_values[1])
 					.SetDefaultStyle(s2).Write(col_values[2])
@@ -989,7 +991,7 @@ namespace Texttool
 							throw new Exception("Line block mismatch (" + str_bid + " " + jp_text + ")");
 						}
 
-						if (jp_text != null && jp_text != "" && jp_text.Replace("<pause>", "") != line_block.Text.Replace("<pause>", ""))
+						if (jp_text != null && jp_text != "" && jp_text.Replace("<pause>", "").Replace("\\n", "") != line_block.Text.Replace("<pause>", "").Replace("\\n", ""))
 						{
 							throw new Exception("JP text mismatch");
 						}
@@ -1115,13 +1117,48 @@ namespace Texttool
 				return;
 
 			string[] lines = s.Replace("\\r", "").Split('\n');
-			s = "Translate this from Japanese to English in present-tense so it sounds natural:\r\n";
+
+			s = "";
+			s += "Translate these Japanese lines to English lines:\n";
 			for (int i = 0; i < lines.Length; i++)
 			{
 				s += (i + 1).ToString() + ") " + lines[i];
 			}
-			s += "\r\n";
+			s += "\n\n1)";
 			s = s.Replace("<pause>", "");
+			Clipboard.SetText(s);
+			textBox1.Focus();
+		}
+
+		private void button8_Click(object sender, EventArgs e)
+		{
+			string s = Clipboard.GetText();
+			if (string.IsNullOrEmpty(s))
+				return;
+
+			string[] lines = s.Split('\n');
+			s = "";
+			for (int i = 0; i < lines.Length;i++)
+			{
+				string l = lines[i];
+				l = l.Replace((i + 1).ToString() + ") ", "");
+				int dialogue = l.IndexOf(": \"");
+				if (dialogue != -1)
+				{
+					l = l.Substring(dialogue + 3);
+				}
+				s += l + "\n";
+			}
+
+			Clipboard.SetText(s);
+			textBox1.Focus();
+		}
+
+		private void button9_Click(object sender, EventArgs e)
+		{
+			string s = "Convert this from past to present tense:\n";
+			s += Clipboard.GetText();
+			s += "\n\n1)";
 			Clipboard.SetText(s);
 			textBox1.Focus();
 		}
@@ -1470,13 +1507,13 @@ namespace Texttool
 								continue;
 							}
 						}
-						if (b1 == 0 && b3 != 0x41 && b3 != 0x42)
+						if (b1 == 0 && b3 != 0x41 && b3 != 0x42 && b3 != 0x16)
 						{
 							bstring.Clear();
 							off += 2;
 							continue;
 						}
-						if (b1 == 0 && (b3 == 0x41 || b3 == 0x42))
+						if (b1 == 0 && (b3 == 0x41 || b3 == 0x42 || b3 == 0x16))
 						{
 							break;
 						}
