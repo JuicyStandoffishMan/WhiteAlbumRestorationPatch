@@ -592,6 +592,7 @@ namespace Texttool
 				}
 
 				fnt_file.ReplaceFile("MAINTEXT.fnt", ((MemoryStream)writer.BaseStream).ToArray());
+				fnt_file.ReplaceFile("SELECTTEXT.fnt", ((MemoryStream)writer.BaseStream).ToArray());
 				fnt_file.Save("C:\\Program Files\\WA1\\Font.pck");
 			}
 		}
@@ -1013,7 +1014,7 @@ namespace Texttool
 								}
 							}
 							line_block.Text = filter_string(en_text);
-							if(jp_text.EndsWith("<pause>") && !line_block.Text.EndsWith("<pause>"))
+							if (jp_text.EndsWith("<pause>") && !line_block.Text.EndsWith("<pause>"))
 							{
 								line_block.Text += "<pause>";
 							}
@@ -1138,7 +1139,7 @@ namespace Texttool
 
 			string[] lines = s.Split('\n');
 			s = "";
-			for (int i = 0; i < lines.Length;i++)
+			for (int i = 0; i < lines.Length; i++)
 			{
 				string l = lines[i];
 				l = l.Replace((i + 1).ToString() + ") ", "");
@@ -1354,6 +1355,7 @@ namespace Texttool
 					CharacterValue character_value = new CharacterValue();
 					bool string_start = false;
 					int counter_id = 0;
+					bool in_option = false;
 
 					byte opcode = text_data[off++];
 					if (opcode == 0x22)
@@ -1417,6 +1419,23 @@ namespace Texttool
 								string_start = true;
 								break;
 							}
+							if(opcode == 0xFF && text_data[off] == 0xFF && text_data[off + 1] == 0xFF)
+							{
+								off += 2;
+								string_start = true;
+								in_option = true;
+								break;
+							}
+						}
+					}
+					else if (opcode == 0xFF)
+					{
+						// Option
+						if (text_data[off] == 0xFF && text_data[off + 1] == 0xFF)
+						{
+							off += 2;
+							string_start = true;
+							in_option = true;
 						}
 					}
 
@@ -1435,6 +1454,10 @@ namespace Texttool
 
 						if (b1 == 0x5C && b2 == 0x6B)
 						{
+							if(off == 0x16A4)
+							{
+
+							}
 							if (bstring.Count > 0)
 							{
 								LineBlock sub_block = new LineBlock(encoding, start);
@@ -1507,6 +1530,10 @@ namespace Texttool
 								continue;
 							}
 						}
+						if(in_option && b1 == 0)
+						{
+							break;
+						}
 						if (b1 == 0 && b3 != 0x41 && b3 != 0x42 && b3 != 0x16)
 						{
 							bstring.Clear();
@@ -1517,6 +1544,7 @@ namespace Texttool
 						{
 							break;
 						}
+						
 
 						if (bstring.Count == 0)
 							start = off;
