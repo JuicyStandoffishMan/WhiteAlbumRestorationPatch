@@ -1,4 +1,4 @@
-# White Album 1 Translation Project
+# White Album Translation Project
 
 This is a collection of tools to aid in extracting and modifying [White Album 1 (2012 PC version)](https://vndb.org/r20439) resources to create an accompanying [English translation](#translation).
 
