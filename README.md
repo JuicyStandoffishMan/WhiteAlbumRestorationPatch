@@ -1,4 +1,4 @@
-# White Album 1 Translation Project
+# White Album Translation Project
 
 This is a collection of tools to aid in extracting and modifying [White Album 1 (2012 PC version)](https://vndb.org/r20439) resources to create an accompanying [English translation](#translation).
 
@@ -41,8 +41,8 @@ Currently a TODO, which will happen when Form1.cs is made to be less terrible.
 An ongoing effort is being made to translate the game. Translated scripts can be found in the [tl folder](/tl/). Batch importing is not supported yet.
 
 ### Progress
-- **TL:** 8/1107
-- **Edited:** 1/1107
+- **TL:** 9/1107
+- **Edited:** 2/1107
 - **TLC:** 0/1107
 
 Check out [the progress spreadsheet for more information](/tl/progress.xlsx).
