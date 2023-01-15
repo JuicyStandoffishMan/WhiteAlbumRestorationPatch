@@ -282,7 +282,7 @@ namespace Texttool
 						ind = s.Length - (i + 1);
 					else
 						ind -= i + 1;
-					if (ind + line_count >= CharsPerLine - 3)
+					if (ind + line_count >= CharsPerLine - 4)
 					{
 						if (char_count >= 100)
 						{
@@ -1360,6 +1360,10 @@ namespace Texttool
 					byte opcode = text_data[off++];
 					if (opcode == 0x22)
 					{
+						if(off == 0x2798)
+						{
+
+						}
 						off++;
 						if (text_data[off - 1] == 0)
 						{
@@ -1392,7 +1396,7 @@ namespace Texttool
 									counter_id |= text_data[off++] << 0;
 								}
 							}
-							else if ((opcode >= 0x80 || (opcode == 0x3C && (text_data[off] == 0x63 || text_data[off] == 0x52 || text_data[off] == 0x57))) && text_data[off - 2] == 0)
+							else if ((opcode >= 0x80 || (opcode == 0x3C && (text_data[off] == 0x63 || text_data[off] == 0x52 || text_data[off] == 0x57))) && (text_data[off - 2] == 0 || text_data[off - 2] == 0x22))
 							{
 								off--;
 								string_start = true;
@@ -1534,13 +1538,13 @@ namespace Texttool
 						{
 							break;
 						}
-						if (b1 == 0 && b3 != 0x41 && b3 != 0x42 && b3 != 0x16)
+						if (b1 == 0 && b3 != 0x41 && b3 != 0x42 && b3 != 0x16 && b3 != 0x25)
 						{
 							bstring.Clear();
 							off += 2;
 							continue;
 						}
-						if (b1 == 0 && (b3 == 0x41 || b3 == 0x42 || b3 == 0x16))
+						if (b1 == 0 && (b3 == 0x41 || b3 == 0x42 || b3 == 0x16 || b3 == 0x25))
 						{
 							break;
 						}
