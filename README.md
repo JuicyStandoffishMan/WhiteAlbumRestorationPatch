@@ -42,7 +42,7 @@ An ongoing effort is being made to translate the game. Translated scripts can be
 
 ### Progress
 - **TL:** 19/1107
-- **Edited:** 9/1107
+- **Edited:** 10/1107
 - **TLC:** 0/1107
 
 Check out [the progress spreadsheet for more information](/tl/progress.xlsx).
