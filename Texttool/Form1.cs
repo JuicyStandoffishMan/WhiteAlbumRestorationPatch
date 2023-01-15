@@ -1269,7 +1269,7 @@ namespace Texttool
 					breakblock.Add(0x2C);
 					breakblock.Add(0x7F);
 					breakblock.Add(0);
-					breakblock.Add(0);
+					breakblock.Add(0xFF);
 					breakblock.Add(0);
 				}
 				text = text.Replace("<ｋａｅｒｂ>", encoding.GetString(breakblock.ToArray()));
