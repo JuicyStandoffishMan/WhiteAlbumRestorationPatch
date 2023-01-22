@@ -258,6 +258,10 @@ namespace Texttool
 				{
 					c = '）';
 				}
+				else if (c == '%')
+				{
+					c = '％';
+				}
 				else if (c == '<')
 				{
 					// Next character should be R, c, or W
@@ -452,6 +456,10 @@ namespace Texttool
 					{
 						c = '）';
 					}
+					else if (c == '%')
+					{
+						c = '％';
+					}
 					else if (c == (char)127)
 					{
 						c = '…';
@@ -551,6 +559,10 @@ namespace Texttool
 					else if (c == ')')
 					{
 						c = '）';
+					}
+					else if (c == '%')
+					{
+						c = '％';
 					}
 					else if (c == 127)
 					{
