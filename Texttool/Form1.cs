@@ -19,6 +19,8 @@ using LargeXlsx;
 using ExcelDataReader;
 using System.Runtime.ConstrainedExecution;
 using System.Security.Cryptography;
+using System.Collections;
+using SharpCompress.Writers;
 
 namespace Texttool
 {
@@ -118,10 +120,13 @@ namespace Texttool
 			{
 				TEXFile tex = new TEXFile { UseBigEndian = true };
 				tex.Load(path, true);
-				foreach (var f in tex.Frames)
+				if (tex.Frames.Count > 1)
 				{
-
+					string dir = Path.GetDirectoryName(path) + "/" + Path.GetFileNameWithoutExtension(path) + " parts/";
+					Directory.CreateDirectory(dir);
+					tex.DumpFrames(dir);
 				}
+				return;
 			}
 			else if (path.EndsWith(".fnt"))
 			{
@@ -130,11 +135,12 @@ namespace Texttool
 			}
 			else if (path.EndsWith(".png"))
 			{
-				read_png(path);
+				//read_png(path);
+				WritePNGToTex(path);
 				return;
 
 			}
-			else if (path.EndsWith("WHITE ALBUM.exe"))
+			else if (path.ToLower().EndsWith("white album.exe"))
 			{
 				patch_exe(path);
 				return;
@@ -161,6 +167,7 @@ namespace Texttool
 				cbFile.Items.Add(v.FileName);// + " (" + v.DataLength + " bytes)");
 				slist += v.FileName + "\n";
 			}
+			//PrintProgress();
 			//Clipboard.SetText(slist);
 			//pck_file.ExtractAllFiles(Path.GetFileNameWithoutExtension(filePath));
 			cbFile.Enabled = true;
@@ -321,13 +328,197 @@ namespace Texttool
 			return sb.ToString();
 		}
 
+		private void PrintProgress()
+		{
+			int line_count = 0;
+			int num_translated_lines = 0;
+			foreach (var v in pck_file.FileEntries)
+			{
+				Script ss = new Script(v.Data);
+				foreach (var block in ss.Blocks)
+				{
+					if (block is LineBlock)
+					{
+						line_count++;
+						if (((LineBlock)block).CharacterName == "Izumi")
+						{
+
+						}
+					}
+				}
+			}
+
+			foreach (var file in Directory.EnumerateFiles("C:\\Program Files\\WA1\\Data\\Game\\excel\\trimmed\\"))
+			{
+				using var stream = new FileStream(file, FileMode.Open, FileAccess.Read, FileShare.ReadWrite);
+				using var reader = ExcelReaderFactory.CreateReader(stream);
+
+				int block = 0;
+				do
+				{
+					reader.Read();
+					while (reader.Read())
+					{
+						int src_index = 0;
+
+						string status = reader.GetString(0);
+						string str_bid = reader.GetString(1);
+						string id = reader.GetString(2);
+						string name = reader.GetString(3);
+						string jp_text = reader.GetString(4);
+						string en_text = reader.GetString(5);
+						if (str_bid == null && jp_text == null)
+							continue;
+
+						if (string.IsNullOrEmpty(en_text))
+							en_text = reader.GetString(6);
+
+						if (!string.IsNullOrEmpty(en_text))
+						{
+							num_translated_lines++;
+						}
+					}
+				} while (reader.NextResult());
+			}
+
+			MessageBox.Show(num_translated_lines + "/" + line_count + " lines translated (" + ((double)num_translated_lines / (double)line_count * 100.0).ToString("0.00") + "%)");
+		}
+
 		private void patch_exe(string path)
 		{
+			var encoding = System.Text.CodePagesEncodingProvider.Instance.GetEncoding("Shift-JIS");
+
+			// Main text spacing
 			byte[] bytes = File.ReadAllBytes(path);
 			bytes[0x17DC1] = (byte)CharsPerLine; // Visual chars per line
 			bytes[0x17B9C] = (byte)CharsPerLine; // Actual chars per line
 			bytes[0x176C6] = 0x0E; // X spacing
 			bytes[0x176D7] = 0x24; // Y spacing
+
+			// Chat genre spacing
+			bytes[0x4F2DB] = 0x0E; // X spacing
+
+			// Name box X spacing
+			byte bb = (byte)((-13) & 0xff);
+			bytes[0x4a71e] = bb;
+			bytes[0x4a720] = bb;
+			//bytes[0x4a71e] = bb;
+
+			// asm modifying options spacing since i can't find where [EDI+0x58]=5 comes from...
+			// mov eax, <spacing>
+			// fst dword ptr ss:[esp+4]
+			// nop
+			// nop
+			// nop
+			// nop
+			{
+				int spacing = -13;
+				byte[] asm =
+				{
+					0xb8, (byte)((spacing >> 0) & 0xff), (byte)((spacing >> 8) & 0xff),(byte)((spacing >> 16) & 0xff),(byte)((spacing >> 24) & 0xff), 0xd9, 0x54, 0x24, 0x04, 0x90, 0x90, 0x90, 0x90
+				};
+				Array.Copy(asm, 0, bytes, 0x160ae, asm.Length);
+			}
+
+			// Chat genre options
+			string[] options =
+			{
+				"Ｃｈａｔ",
+				"Ｈｏｂｂｉｅｓ",
+				"Ｅｎｔｅｒｔａｉｎｍｅｎｔ",
+				"Ｌｉｔｅｒａｔｕｒｅ",
+				"Ｌｏｖｅ"
+			};
+
+			int[] src_options =
+			{
+				0x225198,
+				0x2251a0,
+				0x2251a8,
+				0x2251b0,
+				0x2251b8
+			};
+
+			int[] dst_options =
+			{
+				0x4f48d,
+				0x4f49a,
+				0x4f4a7,
+				0x4f4b4,
+				0x4f4c1
+			};
+
+			int dst = 0x225118;
+			int start = dst;
+			for (int i = 0; i < 5; i++)
+			{
+				// Update the string pointer
+				int dst_value = 0x00625f98 - 0x80 + dst - start;
+				bytes[dst_options[i]] = (byte)((dst_value >> 0) & 0xFF);
+				bytes[dst_options[i] + 1] = (byte)((dst_value >> 8) & 0xFF);
+				bytes[dst_options[i] + 2] = (byte)((dst_value >> 16) & 0xFF);
+				bytes[dst_options[i] + 3] = (byte)((dst_value >> 24) & 0xFF);
+
+				byte[] chat_bytes = encoding.GetBytes(options[i]);
+				Array.Copy(chat_bytes, 0, bytes, dst, chat_bytes.Length);
+				dst += chat_bytes.Length;
+				bytes[dst++] = 0;
+				bytes[dst++] = 0;
+			}
+
+			// Character names
+			int char_name_ptr_table = 0x23e1f8;
+			int char_name_dest = 0x222ee8;
+			int ptr_add_value = 0x400E00;
+			string name_sum = ""; //string[] names = new string[32];
+			for (int i = 0; i < 32; i++)
+			{
+				/*int program_addr = 0;
+				program_addr += bytes[char_name_ptr_table + i * 4 + 0] << 0;
+				program_addr += bytes[char_name_ptr_table + i * 4 + 1] << 8;
+				program_addr += bytes[char_name_ptr_table + i * 4 + 2] << 16;
+				program_addr += bytes[char_name_ptr_table + i * 4 + 3] << 24;
+
+				int real_addr = program_addr - 0x6216b4 + 0x2208b4;
+				List<byte> char_data = new List<byte>();
+				while (true)
+				{
+					byte b = bytes[real_addr++];
+					if (b == 0)
+						break;
+					char_data.Add(b);
+				}
+
+				name_sum += encoding.GetString(char_data.ToArray()) + "\r\n";*/
+				bytes[char_name_ptr_table + i * 4 + 0] = (byte)(((char_name_dest + ptr_add_value) >> 0) & 0xFF);
+				bytes[char_name_ptr_table + i * 4 + 1] = (byte)(((char_name_dest + ptr_add_value) >> 8) & 0xFF);
+				bytes[char_name_ptr_table + i * 4 + 2] = (byte)(((char_name_dest + ptr_add_value) >> 16) & 0xFF);
+				bytes[char_name_ptr_table + i * 4 + 3] = (byte)(((char_name_dest + ptr_add_value) >> 24) & 0xFF);
+
+				byte[] nb = encoding.GetBytes(filter_string(Script.GetCharName(i + 1)));
+				if(char_name_dest + nb.Length + 2 >= 0x229b5f)
+				{
+
+				}
+				Array.Copy(nb, 0, bytes, char_name_dest, nb.Length);
+				char_name_dest += nb.Length;
+				bytes[char_name_dest++] = 0;
+				bytes[char_name_dest++] = 0;
+
+				if(i == 5)
+				{
+					char_name_dest = 0x222f58;//0x22991C;
+				}
+				else if(i == 9)
+				{
+					char_name_dest = 0x2298e0;
+				}
+				else if(i == 11)
+				{
+					char_name_dest = 0x22991c;
+				}
+			}
+			//Clipboard.SetText(name_sum);
 
 			try
 			{
@@ -607,6 +798,37 @@ namespace Texttool
 				fnt_file.ReplaceFile("SELECTTEXT.fnt", ((MemoryStream)writer.BaseStream).ToArray());
 				fnt_file.Save("C:\\Program Files\\WA1\\Font.pck");
 			}
+		}
+
+		public void WritePNGToTex(string filename)
+		{
+			Bitmap bmp = new Bitmap(filename);
+			ExtendedBinaryWriter writer = new ExtendedBinaryWriter(new MemoryStream(64 * 1024 * 1024), true);
+			writer.WriteSignature("Texture ");
+			writer.Write(bmp.Width * bmp.Height * 4 + 36);
+			writer.Write((byte)0);
+			writer.Write((byte)0);
+			writer.Write((byte)0);
+			writer.Write((byte)8);
+			writer.Write(bmp.Width * bmp.Height * 4);
+			writer.Write(bmp.Width);
+			writer.Write(bmp.Height);
+			writer.Write(bmp.Width);
+			writer.Write(bmp.Height);
+
+			for (int y = 0; y < bmp.Height; y++)
+			{
+				for (int x = 0; x < bmp.Width; x++)
+				{
+					Color c = bmp.GetPixel(x, y);
+					writer.Write((byte)c.B);
+					writer.Write((byte)c.G);
+					writer.Write((byte)c.R);
+					writer.Write((byte)c.A);
+				}
+			}
+
+			File.WriteAllBytes(Path.GetDirectoryName(filename) + "/" + Path.GetFileNameWithoutExtension(filename) + ".tex", ((MemoryStream)writer.BaseStream).ToArray());
 		}
 
 		private void update_text()
@@ -1297,6 +1519,7 @@ namespace Texttool
 		public List<Block> Blocks = new List<Block>();
 
 		public static string[] char_names = new string[64];
+		public static string[] jp_names = new string[32];
 		public static string GetCharName(int v)
 		{
 			if (v < 0 || v >= char_names.Length || string.IsNullOrEmpty(char_names[v]))
@@ -1311,9 +1534,68 @@ namespace Texttool
 			char_names[3] = "Rina";
 			char_names[4] = "Haruka";
 			char_names[5] = "Misaki";
-			char_names[6] = "Female Voice";
-			char_names[7] = "Male Voice";
+			char_names[6] = "Mana";
+			char_names[7] = "Yayoi";
+			char_names[8] = "Sayoko";
 			char_names[9] = "Akira";
+			char_names[10] = "Eiji";
+			char_names[11] = "Nobuko";
+			char_names[12] = "Izumi";
+			char_names[13] = "Nagase";
+			char_names[14] = "Other Female";
+			char_names[15] = "???";
+			char_names[16] = "AD Staff";
+			char_names[17] = "Answering Machine";
+			char_names[18] = "Floor Director";
+			char_names[19] = "Father";
+			char_names[20] = "Courier";
+			char_names[21] = "Female Voice";
+			char_names[22] = "Male Voice";
+			char_names[23] = "Nanase";
+			char_names[24] = "Mediator";
+			char_names[25] = "Drunk A";
+			char_names[26] = "Drunk B";
+			char_names[27] = "Sawakura";
+			char_names[28] = "Drama Club Member"; // Drama club member
+			char_names[29] = "Kawashima";
+			char_names[30] = "Girl";
+			char_names[31] = "Girl A";
+			char_names[32] = "Girl B";
+
+
+			jp_names[0] = "冬弥";
+			jp_names[1] = "由綺";
+			jp_names[2] = "理奈";
+			jp_names[3] = "はるか";
+			jp_names[4] = "美咲";
+			jp_names[5] = "マナ";
+			jp_names[6] = "弥生";
+			jp_names[7] = "小夜子";
+			jp_names[8] = "彰";
+			jp_names[9] = "英二";
+			jp_names[10] = "ノブコ";
+			jp_names[11] = "イズミ";
+			jp_names[12] = "長瀬";
+			jp_names[13] = "その他女性";
+			jp_names[14] = "？？？";
+			jp_names[15] = "ＡＤスタッフ";
+			jp_names[16] = "留守番電話";
+			jp_names[17] = "フロアディレクター";
+			jp_names[18] = "親父";
+			jp_names[19] = "宅配業者";
+			jp_names[20] = "女性の声";
+			jp_names[21] = "男性の声";
+			jp_names[22] = "七瀬";
+			jp_names[23] = "斡旋業者";
+			jp_names[24] = "酔っ払いＡ";
+			jp_names[25] = "酔っ払いＢ";
+			jp_names[26] = "澤倉";
+			jp_names[27] = "演劇部員";
+			jp_names[28] = "河島";
+			jp_names[29] = "女の子";
+			jp_names[30] = "女の子Ａ";
+			jp_names[31] = "女の子Ｂ";
+
 		}
 
 		public byte[] Compile(byte[] compare)
@@ -1372,7 +1654,7 @@ namespace Texttool
 					byte opcode = text_data[off++];
 					if (opcode == 0x22)
 					{
-						if(off == 0x2798)
+						if (off == 0x2798)
 						{
 
 						}
@@ -1435,7 +1717,7 @@ namespace Texttool
 								string_start = true;
 								break;
 							}
-							if(opcode == 0xFF && text_data[off] == 0xFF && text_data[off + 1] == 0xFF)
+							if (opcode == 0xFF && text_data[off] == 0xFF && text_data[off + 1] == 0xFF)
 							{
 								off += 2;
 								string_start = true;
@@ -1470,7 +1752,7 @@ namespace Texttool
 
 						if (b1 == 0x5C && b2 == 0x6B)
 						{
-							if(off == 0x16A4)
+							if (off == 0x16A4)
 							{
 
 							}
@@ -1546,7 +1828,7 @@ namespace Texttool
 								continue;
 							}
 						}
-						if(in_option && b1 == 0)
+						if (in_option && b1 == 0)
 						{
 							break;
 						}
@@ -1560,7 +1842,7 @@ namespace Texttool
 						{
 							break;
 						}
-						
+
 
 						if (bstring.Count == 0)
 							start = off;

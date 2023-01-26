@@ -115,6 +115,5 @@ namespace DALLib.File
         public virtual void Save(ExtendedBinaryWriter writer)
         {
         }
-
     }
 }

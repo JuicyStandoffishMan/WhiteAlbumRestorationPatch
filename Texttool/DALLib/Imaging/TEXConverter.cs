@@ -99,13 +99,14 @@ namespace DALLib.Imaging
 				{
 					for (int x = 0; x < file.SheetWidth; x++)
 					{
-						Color c = Color.FromArgb(file.SheetData[o + 3], file.SheetData[o + 0], file.SheetData[o + 1], file.SheetData[o + 2]);
+						Color c = Color.FromArgb(file.SheetData[o + 3], file.SheetData[o + 2], file.SheetData[o + 1], file.SheetData[o + 0]);
 						bmp.SetPixel(x, y, c);
 						o += 4;
 					}
 				}
 
 				bmp.Save("C:\\www.png");
+				file.Bmp = bmp;
 			}
 			else if ((format & Format.BGRA) != 0)
 			{
