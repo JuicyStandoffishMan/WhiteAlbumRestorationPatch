@@ -388,6 +388,8 @@ namespace Texttool
 		{
 			var encoding = System.Text.CodePagesEncodingProvider.Instance.GetEncoding("Shift-JIS");
 
+			int spacing = -13;
+
 			// Main text spacing
 			byte[] bytes = File.ReadAllBytes(path);
 			bytes[0x17DC1] = (byte)CharsPerLine; // Visual chars per line
@@ -399,10 +401,9 @@ namespace Texttool
 			bytes[0x4F2DB] = 0x0E; // X spacing
 
 			// Name box X spacing
-			byte bb = (byte)((-13) & 0xff);
+			byte bb = (byte)((spacing) & 0xff);
 			bytes[0x4a71e] = bb;
 			bytes[0x4a720] = bb;
-			//bytes[0x4a71e] = bb;
 
 			// asm modifying options spacing since i can't find where [EDI+0x58]=5 comes from...
 			// mov eax, <spacing>
@@ -412,12 +413,22 @@ namespace Texttool
 			// nop
 			// nop
 			{
-				int spacing = -13;
 				byte[] asm =
 				{
 					0xb8, (byte)((spacing >> 0) & 0xff), (byte)((spacing >> 8) & 0xff),(byte)((spacing >> 16) & 0xff),(byte)((spacing >> 24) & 0xff), 0xd9, 0x54, 0x24, 0x04, 0x90, 0x90, 0x90, 0x90
 				};
 				Array.Copy(asm, 0, bytes, 0x160ae, asm.Length);
+			}
+
+			// asm modifying backlog spacing
+			// mov edx, <spacing>
+			// nop
+			{
+				byte[] asm =
+				{
+					0xba,  (byte)((spacing >> 0) & 0xff), (byte)((spacing >> 8) & 0xff),(byte)((spacing >> 16) & 0xff),(byte)((spacing >> 24) & 0xff), 0x90
+				};
+				Array.Copy(asm, 0, bytes, 0x2676a, asm.Length);
 			}
 
 			// Chat genre options
