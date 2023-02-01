@@ -167,7 +167,7 @@ namespace Texttool
 				cbFile.Items.Add(v.FileName);// + " (" + v.DataLength + " bytes)");
 				slist += v.FileName + "\n";
 			}
-			//PrintProgress();
+			PrintProgress();
 			//Clipboard.SetText(slist);
 			//pck_file.ExtractAllFiles(Path.GetFileNameWithoutExtension(filePath));
 			cbFile.Enabled = true;
@@ -312,6 +312,10 @@ namespace Texttool
 				else if (c == '-')
 				{
 					c = 'ー';
+				}
+				else if (c == '~')
+				{
+					c = '～';
 				}
 
 				sb.Append(c);
@@ -650,6 +654,10 @@ namespace Texttool
 					{
 						c = 'ー';
 					}
+					else if (c == '~')
+					{
+						c = '～';
+					}
 					else if (c == '(')
 					{
 						c = '（';
@@ -753,6 +761,10 @@ namespace Texttool
 					else if (c == '-')
 					{
 						c = 'ー';
+					}
+					else if (c == '~')
+					{
+						c = '～';
 					}
 					else if (c == '(')
 					{
