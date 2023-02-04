@@ -19,18 +19,14 @@ To use the translated scripts that are located in the [tl folder of this repo](/
 **Batch importing and saving is not yet supported**, so you have to do the above process manually for each script.
 
 ### Executable Patching
-Drag 'WHITE ALBUM.exe' into the window to apply the following data changes:
-```
-public int CharsPerLine = 0x3D;
-...
--0x17DC1 = (byte)CharsPerLine; // Visual chars per line
--0x17B9C = (byte)CharsPerLine; // Actual chars per line
--0x176C6 = 0x0E; // X spacing
--0x176D7 = 0x24; // Y spacing
-```
+Drag 'WHITE ALBUM.exe' into the window to apply the following changes:
+- Character spacing correction in the main text window, main window character names, backlog, options menu, genre select menu, and other popup menus
+- Name translations
+- Genre select menu translations
+The details for these patches are in `patch_exe` and are generally some instruction changes and string table repointing + updating.
 
 ### Font Extraction
-This was a manual process that extracted 'MAINTEXT.fnt' from 'Font.pck' and stripped the header, producing a raw .tex file that was then converted into MAINTEXT.png. It was then scaled down to 75%, expanded vertically to be 1512x1134, and had English characters with decoration manually added. The new font characters are available in resources/MAINTEXT.png, but the original characters are blacked out due to copyright. Dragging this file will repack it into 'Font.pck', assuming it's in the same folder where the file was dragged from.
+This was a manual process that extracted 'MAINTEXT.fnt' from 'Font.pck' and stripped the header, producing a raw .tex file that was then converted into MAINTEXT.png. It was then scaled down to 75%, expanded vertically to be 1512x1134, and had English characters with decoration manually added. The new font characters are available in resources/MAINTEXT.png, but the original characters are blacked out due to copyright. Dragging this file will repack it into 'Font.pck', assuming it's in the same folder where the file was dragged from. A similar process was done to SELECTTEXT.fnt.
 
 Alternatively, there's a [Lunar IPS patch available for it here](/resources/Font%20patch.zip). Just apply it to 'Data/Font.pck'.
 
