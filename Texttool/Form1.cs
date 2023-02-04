@@ -1379,12 +1379,12 @@ namespace Texttool
 			string[] lines = s.Replace("\\r", "").Split('\n');
 
 			s = "";
-			s += "Translate these Japanese lines to English lines:\n";
+			s += "Translate these Japanese lines to colloquial, natural English lines:\n";
 			for (int i = 0; i < lines.Length; i++)
 			{
-				s += (i + 1).ToString() + ") " + lines[i];
+				s += (i + 1).ToString() + ". " + lines[i];
 			}
-			s += "\n\n1)";
+			s += "\n\n1.";
 			s = s.Replace("<pause>", "");
 			Clipboard.SetText(s);
 			textBox1.Focus();
