@@ -23,6 +23,7 @@ Drag 'WHITE ALBUM.exe' into the window to apply the following changes:
 - Character spacing correction in the main text window, main window character names, backlog, options menu, genre select menu, and other popup menus
 - Name translations
 - Genre select menu translations
+
 The details for these patches are in `patch_exe` and are generally some instruction changes and string table repointing + updating.
 
 ### Font Extraction
