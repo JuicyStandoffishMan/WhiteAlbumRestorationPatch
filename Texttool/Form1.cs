@@ -1270,6 +1270,8 @@ namespace Texttool
 									en_text += "″";
 								}
 							}
+							if (jp_text.EndsWith("<pause>"))
+								en_text += "<pause>";
 							line_block.Text = filter_string(en_text);
 							if (jp_text.EndsWith("<pause>") && !line_block.Text.EndsWith("<pause>"))
 							{
@@ -1455,7 +1457,7 @@ namespace Texttool
 			{
 				if (CharacterValue.b2 == 1)
 				{
-					return Script.GetCharName(CharacterValue.b4);
+					return Script.GetCharName(CharacterValue.b4-1);
 				}
 				else
 				{
