@@ -38,8 +38,8 @@ Currently a TODO, which will happen when Form1.cs is made to be less terrible.
 An ongoing effort is being made to translate the game. Translated scripts can be found in the [tl folder](/tl/). Batch importing is not supported yet.
 
 ### Progress
-- **TL:** 53/1107
-- **Edited:** 44/1107
+- **TL:** 56/1107
+- **Edited:** 47/1107
 - **TLC:** 0/1107
 - **Lines:** 2055/47453
 
