@@ -2,8 +2,6 @@
 
 This is a collection of tools to aid in extracting and modifying [White Album 1 (2012 PC version)](https://vndb.org/r20439) resources to create an accompanying [English translation](#translation).
 
-[![](https://dcbadge.vercel.app/api/server/VaKQ4V66uF)](https://discord.gg/VaKQ4V66uF)
-
 ## Building
 
 Visual Studio 2022 with .NET Core 6.
