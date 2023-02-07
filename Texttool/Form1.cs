@@ -284,7 +284,7 @@ namespace Texttool
 					i++;
 					continue;
 				}
-				else if (c == ' ' || c == '　')
+				else if (c == ' ' || c == '　' || c == '\"')
 				{
 					int space = s.IndexOf(' ', i + 1);
 					int dash = s.IndexOf('-', i + 1);
