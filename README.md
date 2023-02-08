@@ -1,5 +1,7 @@
 # White Album Translation Project
 
+![img](yuki.png)
+
 This is a collection of tools to aid in extracting and modifying [White Album 1 (2012 PC version)](https://vndb.org/r20439) resources to create an accompanying [English translation](#translation).
 
 ## Building
