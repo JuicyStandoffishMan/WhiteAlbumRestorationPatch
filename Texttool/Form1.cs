@@ -145,6 +145,11 @@ namespace Texttool
 				patch_exe(path);
 				return;
 			}
+			else if(path.ToLower().EndsWith("bgm.pck"))
+			{
+				dump_music(path);
+				return;
+			}
 			bool save = false;
 			if (Texttool.Properties.Settings.Default.last_dir != path)
 			{
@@ -544,6 +549,21 @@ namespace Texttool
 			catch (Exception ex)
 			{
 				MessageBox.Show("Failed to patch exe " + path + "\n: " + ex.Message);
+			}
+		}
+
+		public void dump_music(string path)
+		{
+			string folder = Path.GetDirectoryName(path) + Path.DirectorySeparatorChar + "bgm" + Path.DirectorySeparatorChar;
+			if (!Directory.Exists(path))
+			{
+				Directory.CreateDirectory(folder);
+			}
+			var pck = new PCKFile { UseBigEndian = true };
+			pck.Load(path, false);
+			foreach (var v in pck.FileEntries)
+			{
+				File.WriteAllBytes(folder + v.FileName + ".ogg", v.Data);	
 			}
 		}
 
