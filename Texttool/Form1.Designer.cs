@@ -232,7 +232,7 @@
 			this.button9.Name = "button9";
 			this.button9.Size = new System.Drawing.Size(295, 32);
 			this.button9.TabIndex = 19;
-			this.button9.Text = "Copy Tense";
+			this.button9.Text = "Copy Plain Lines";
 			this.button9.UseVisualStyleBackColor = false;
 			this.button9.Click += new System.EventHandler(this.button9_Click);
 			// 

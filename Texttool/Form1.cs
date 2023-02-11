@@ -1399,7 +1399,8 @@ namespace Texttool
 			string[] lines = s.Replace("\\r", "").Split('\n');
 
 			s = "";
-			s += "Translate these Japanese lines to colloquial, natural English lines:\n";
+			s += "Translate these Japanese lines to English:\n";
+			string[] og_lines = textBox1.Text.Substring(0, textBox1.SelectionStart).Replace("\\r", "").Split('\n');
 			for (int i = 0; i < lines.Length; i++)
 			{
 				s += (i + 1).ToString() + ". " + lines[i];
@@ -1412,7 +1413,7 @@ namespace Texttool
 
 		private void button8_Click(object sender, EventArgs e)
 		{
-			string s = Clipboard.GetText();
+			/*string s = Clipboard.GetText();
 			if (string.IsNullOrEmpty(s))
 				return;
 
@@ -1431,16 +1432,33 @@ namespace Texttool
 			}
 
 			Clipboard.SetText(s);
-			textBox1.Focus();
+			textBox1.Focus();*/
 		}
 
 		private void button9_Click(object sender, EventArgs e)
 		{
-			string s = "Convert this from past to present tense:\n";
+			string s = textBox1.SelectedText;
+			if (string.IsNullOrEmpty(s))
+				return;
+
+			string[] og_lines = textBox1.Text.Substring(0, textBox1.SelectionStart).Replace("\\r", "").Split('\n');
+			string[] lines = s.Replace("\\r", "").Split('\n');
+
+			s = "";
+			//s += "Translate these Japanese lines to English:\n";
+			for (int i = 0; i < lines.Length; i++)
+			{
+				s += (i + og_lines.Length).ToString() + ". " + lines[i];
+			}
+			//s += "\n\n1.";
+			s = s.Replace("<pause>", "");
+			Clipboard.SetText(s);
+			textBox1.Focus();
+			/*string s = "Convert this from past to present tense:\n";
 			s += Clipboard.GetText();
 			s += "\n\n1)";
 			Clipboard.SetText(s);
-			textBox1.Focus();
+			textBox1.Focus();*/
 		}
 	}
 
