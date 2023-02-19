@@ -22,6 +22,8 @@ namespace DALLib.File
         /// </summary>
         public bool UseBigEndian = false;
 
+        public string Filename;
+
         /// <summary>
         /// Load file from disk (At the end this calls Load(Stream))
         /// </summary>
@@ -29,6 +31,7 @@ namespace DALLib.File
         /// <param name="keepOpen">Should the file stream be kept open?</param>
         public virtual void Load(string path, bool keepOpen = false)
         {
+            Filename = path;
             if (keepOpen)
                 Load(System.IO.File.OpenRead(path), true, keepOpen);
             else

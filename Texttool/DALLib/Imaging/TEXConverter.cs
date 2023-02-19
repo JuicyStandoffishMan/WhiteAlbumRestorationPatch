@@ -105,7 +105,7 @@ namespace DALLib.Imaging
 					}
 				}
 
-				bmp.Save("C:\\www.png");
+				bmp.Save(file.Filename + ".png");
 				file.Bmp = bmp;
 			}
 			else if ((format & Format.BGRA) != 0)

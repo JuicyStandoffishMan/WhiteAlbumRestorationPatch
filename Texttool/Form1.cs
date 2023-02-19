@@ -116,7 +116,7 @@ namespace Texttool
 			if (path == null || path == "")
 				return;
 
-			if (path.EndsWith(".tex"))
+			if (path.ToLower().EndsWith(".tex"))
 			{
 				TEXFile tex = new TEXFile { UseBigEndian = true };
 				tex.Load(path, true);
@@ -148,6 +148,11 @@ namespace Texttool
 			else if(path.ToLower().EndsWith("bgm.pck"))
 			{
 				dump_music(path);
+				return;
+			}
+			else if(path.ToLower().EndsWith("bg.pck"))
+			{
+				dump_bg(path);
 				return;
 			}
 			bool save = false;
@@ -215,6 +220,12 @@ namespace Texttool
 				{
 					i += 6;
 					sb.Append("<pause>");
+					continue;
+				}
+				if (s.IndexOf("<nopause>", i) == i)
+				{
+					i += 8;
+					sb.Append("<ｋａｅｒｂ>");
 					continue;
 				}
 
@@ -564,6 +575,23 @@ namespace Texttool
 			foreach (var v in pck.FileEntries)
 			{
 				File.WriteAllBytes(folder + v.FileName + ".ogg", v.Data);	
+			}
+		}
+
+		public void dump_bg(string path)
+		{
+			string folder = Path.GetDirectoryName(path) + Path.DirectorySeparatorChar + "bg" + Path.DirectorySeparatorChar;
+			if (!Directory.Exists(path))
+			{
+				Directory.CreateDirectory(folder);
+			}
+			var pck = new PCKFile { UseBigEndian = true };
+			pck.Load(path, false);
+			foreach (var v in pck.FileEntries)
+			{
+				File.WriteAllBytes(folder + v.FileName, v.Data);
+				TEXFile tex = new TEXFile { UseBigEndian = true };
+				tex.Load(folder + v.FileName, true);
 			}
 		}
 
@@ -1290,10 +1318,10 @@ namespace Texttool
 									en_text += "″";
 								}
 							}
-							if (jp_text.EndsWith("<pause>"))
+							if (jp_text.EndsWith("<pause>") && !en_text.EndsWith("<nopause>"))
 								en_text += "<pause>";
 							line_block.Text = filter_string(en_text);
-							if (jp_text.EndsWith("<pause>") && !line_block.Text.EndsWith("<pause>"))
+							if (jp_text.EndsWith("<pause>") && !en_text.EndsWith("<nopause>") && !line_block.Text.EndsWith("<pause>") && !en_text.EndsWith("<nopause>"))
 							{
 								line_block.Text += "<pause>";
 							}
@@ -1541,6 +1569,8 @@ namespace Texttool
 			text = text.Replace("\n", "\\n");
 			text = text.Replace("<ｂｒｅａｋ>", "\\n");
 			text = text.Replace("<pause>", "");
+			text = text.Replace("<nopause>", "");
+			// break kaerb
 			if (text.IndexOf("<ｋａｅｒｂ>") != -1)
 			{
 				if (breakblock == null)
