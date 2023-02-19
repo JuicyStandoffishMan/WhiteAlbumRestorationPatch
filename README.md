@@ -40,10 +40,10 @@ Currently a TODO, which will happen when Form1.cs is made to be less terrible.
 An ongoing effort is being made to translate the game. Translated scripts can be found in the [tl folder](/tl/). Batch importing is not supported yet.
 
 ### Progress
-- **TL:** 65/1107
-- **Edited:** 56/1107
+- **TL:** 88/1107
+- **Edited:** 79/1107
 - **TLC:** 0/1107
-- **Lines:** 2300/47453
+- **Lines:** 2796/47453
 
 Check out [the progress spreadsheet for more information](/tl/progress.xlsx).
 
