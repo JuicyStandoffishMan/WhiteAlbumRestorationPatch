@@ -205,6 +205,8 @@ namespace Texttool
 			StringBuilder sb = new StringBuilder();
 			int line_count = 0;
 			int char_count = 0;
+			if (s.Contains("WA_op"))
+				return s;
 
 			if (last_filter_string.EndsWith("<pause>"))
 			{
