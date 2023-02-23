@@ -21,6 +21,7 @@ using System.Runtime.ConstrainedExecution;
 using System.Security.Cryptography;
 using System.Collections;
 using SharpCompress.Writers;
+using DALLib;
 
 namespace Texttool
 {
@@ -354,6 +355,7 @@ namespace Texttool
 		{
 			int line_count = 0;
 			int num_translated_lines = 0;
+			int num_translated_words = 0;
 			foreach (var v in pck_file.FileEntries)
 			{
 				Script ss = new Script(v.Data);
@@ -398,12 +400,13 @@ namespace Texttool
 						if (!string.IsNullOrEmpty(en_text))
 						{
 							num_translated_lines++;
+							num_translated_words += en_text.Split(' ').Length;
 						}
 					}
 				} while (reader.NextResult());
 			}
 
-			MessageBox.Show(num_translated_lines + "/" + line_count + " lines translated (" + ((double)num_translated_lines / (double)line_count * 100.0).ToString("0.00") + "%)");
+			MessageBox.Show(num_translated_lines + "/" + line_count + " lines translated (" + ((double)num_translated_lines / (double)line_count * 100.0).ToString("0.00") + "%)\n" + num_translated_words + " words");
 		}
 
 		private void patch_exe(string path)
@@ -1004,6 +1007,8 @@ namespace Texttool
 				textBox1.Focus();
 			}*/
 
+			textBox2.Text = filter_string(textBox2.Text);
+
 			Texttool.Properties.Settings.Default.last_search = textBox2.Text;
 			Texttool.Properties.Settings.Default.Save();
 
@@ -1490,6 +1495,21 @@ namespace Texttool
 			Clipboard.SetText(s);
 			textBox1.Focus();*/
 		}
+
+		private void textBox1_TextChanged(object sender, EventArgs e)
+		{
+			string s = textBox1.SelectedText;
+			if (string.IsNullOrEmpty(s))
+				return;
+			string[] lines = s.Replace("\\r", "").Split('\n');
+
+			string numbers = "";
+			for (int i = 0; i < lines.Length; i++)
+			{
+				numbers += (i + 1).ToString() + "." + "\r\n";
+			}
+			txtLines.Text = numbers;
+		}
 	}
 
 	public abstract class Block
@@ -1525,7 +1545,7 @@ namespace Texttool
 			{
 				if (CharacterValue.b2 == 1)
 				{
-					return Script.GetCharName(CharacterValue.b4-1);
+					return Script.GetCharName(CharacterValue.b4+15);
 				}
 				else
 				{

@@ -47,6 +47,7 @@
 			this.button7 = new System.Windows.Forms.Button();
 			this.button8 = new System.Windows.Forms.Button();
 			this.button9 = new System.Windows.Forms.Button();
+			this.txtLines = new System.Windows.Forms.TextBox();
 			this.SuspendLayout();
 			// 
 			// label2
@@ -72,15 +73,16 @@
 			// 
 			this.textBox1.AllowDrop = true;
 			this.textBox1.BackColor = System.Drawing.SystemColors.Window;
-			this.textBox1.Font = new System.Drawing.Font("HGGothicM", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point);
-			this.textBox1.Location = new System.Drawing.Point(17, 79);
+			this.textBox1.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point);
+			this.textBox1.Location = new System.Drawing.Point(36, 79);
 			this.textBox1.Multiline = true;
 			this.textBox1.Name = "textBox1";
 			this.textBox1.ReadOnly = true;
 			this.textBox1.ScrollBars = System.Windows.Forms.ScrollBars.Both;
-			this.textBox1.Size = new System.Drawing.Size(969, 510);
+			this.textBox1.Size = new System.Drawing.Size(945, 510);
 			this.textBox1.TabIndex = 4;
 			this.textBox1.WordWrap = false;
+			this.textBox1.TextChanged += new System.EventHandler(this.textBox1_TextChanged);
 			this.textBox1.DragDrop += new System.Windows.Forms.DragEventHandler(this.textBox1_DragDrop);
 			this.textBox1.DragEnter += new System.Windows.Forms.DragEventHandler(this.Form1_DragEnter);
 			// 
@@ -148,12 +150,12 @@
 			// 
 			// listBox1
 			// 
-			this.listBox1.Font = new System.Drawing.Font("HGGothicM", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point);
+			this.listBox1.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point);
 			this.listBox1.FormattingEnabled = true;
-			this.listBox1.ItemHeight = 16;
+			this.listBox1.ItemHeight = 20;
 			this.listBox1.Location = new System.Drawing.Point(17, 633);
 			this.listBox1.Name = "listBox1";
-			this.listBox1.Size = new System.Drawing.Size(969, 228);
+			this.listBox1.Size = new System.Drawing.Size(969, 224);
 			this.listBox1.TabIndex = 12;
 			this.listBox1.DoubleClick += new System.EventHandler(this.listBox1_DoubleClick);
 			// 
@@ -236,12 +238,27 @@
 			this.button9.UseVisualStyleBackColor = false;
 			this.button9.Click += new System.EventHandler(this.button9_Click);
 			// 
+			// txtLines
+			// 
+			this.txtLines.AllowDrop = true;
+			this.txtLines.BackColor = System.Drawing.SystemColors.Window;
+			this.txtLines.Enabled = false;
+			this.txtLines.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point);
+			this.txtLines.Location = new System.Drawing.Point(12, 79);
+			this.txtLines.Multiline = true;
+			this.txtLines.Name = "txtLines";
+			this.txtLines.ReadOnly = true;
+			this.txtLines.Size = new System.Drawing.Size(18, 510);
+			this.txtLines.TabIndex = 20;
+			this.txtLines.WordWrap = false;
+			// 
 			// Form1
 			// 
 			this.AllowDrop = true;
 			this.AutoScaleDimensions = new System.Drawing.SizeF(7F, 15F);
 			this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
 			this.ClientSize = new System.Drawing.Size(998, 918);
+			this.Controls.Add(this.txtLines);
 			this.Controls.Add(this.button9);
 			this.Controls.Add(this.button8);
 			this.Controls.Add(this.button7);
@@ -288,5 +305,6 @@
 		private System.Windows.Forms.Button button7;
 		private System.Windows.Forms.Button button8;
 		private System.Windows.Forms.Button button9;
+		private System.Windows.Forms.TextBox txtLines;
 	}
 }
