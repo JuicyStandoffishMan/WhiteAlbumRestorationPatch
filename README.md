@@ -41,13 +41,13 @@ An ongoing effort is being made to translate the game. Translated scripts can be
 
 ### Progress
 - **TL:** 88/1107
-- **Edited:** 79/1107
+- **Edited:** 80/1107
 - **TLC:** 0/1107
 - **Lines:** 2796/47453
 
 Check out [the progress spreadsheet for more information](/tl/progress.xlsx).
 
-### [Video Preview](https://www.youtube.com/watch?v=9sM0kkkhB_g)
+### [Video Preview](https://youtu.be/HAoDYiGBEak)
 
 ### Translation Commit Guidelines
 Only trimmed scripts with the original Japanese text taken out are allowed in this repo. Fortunately, this tool provides a feature to do this, as well as merge trimmed scripts with the full ones. See [Importing Scripts from the Repo](#importing-scripts-from-the-repo) for merging scripts from this repo with the source versions for editing.
