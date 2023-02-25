@@ -41,7 +41,7 @@ An ongoing effort is being made to translate the game. Translated scripts can be
 
 ### Progress
 - **TL:** 88/1107
-- **Edited:** 80/1107
+- **Edited:** 81/1107
 - **TLC:** 0/1107
 - **Lines:** 2796/47453
 
