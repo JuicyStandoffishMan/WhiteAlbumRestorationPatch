@@ -1316,11 +1316,11 @@ namespace Texttool
 						{
 							if (line_block.IsDialogue)
 							{
-								if (!en_text.StartsWith("\"") && !en_text.StartsWith("″"))
+								if (!en_text.StartsWith("\"") && !en_text.StartsWith("″") && jp_text != null && jp_text.StartsWith("「"))
 								{
 									en_text = "″" + en_text;
 								}
-								if (!en_text.EndsWith("\"") && !en_text.EndsWith("″"))
+								if (!en_text.EndsWith("\"") && !en_text.EndsWith("″") && jp_text != null && jp_text.EndsWith("」"))
 								{
 									en_text += "″";
 								}
@@ -1448,7 +1448,7 @@ namespace Texttool
 
 		private void button8_Click(object sender, EventArgs e)
 		{
-			/*string s = Clipboard.GetText();
+			string s = Clipboard.GetText();
 			if (string.IsNullOrEmpty(s))
 				return;
 
@@ -1463,11 +1463,15 @@ namespace Texttool
 				{
 					l = l.Substring(dialogue + 3);
 				}
+				if (!l.StartsWith('\"') && l.EndsWith("\"\r"))
+				{
+					l = l.Substring(0, l.Length - 2) + "\r";
+				}
 				s += l + "\n";
 			}
 
 			Clipboard.SetText(s);
-			textBox1.Focus();*/
+			textBox1.Focus();
 		}
 
 		private void button9_Click(object sender, EventArgs e)
