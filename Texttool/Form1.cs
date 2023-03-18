@@ -1434,13 +1434,13 @@ namespace Texttool
 			string[] lines = s.Replace("\\r", "").Split('\n');
 
 			s = "";
-			s += "Translate these Japanese lines to English:\n";
+			s += "These are Japanese lines from the visual novel White Album. Translate them into English as accurately as possible. The narration is from Touya's point of view in present tense. Retain honorifics in the names.\n";
 			string[] og_lines = textBox1.Text.Substring(0, textBox1.SelectionStart).Replace("\\r", "").Split('\n');
 			for (int i = 0; i < lines.Length; i++)
 			{
 				s += (i + 1).ToString() + ". " + lines[i];
 			}
-			s += "\n\n1.";
+			//s += "\n\n1.";
 			s = s.Replace("<pause>", "");
 			Clipboard.SetText(s);
 			textBox1.Focus();
