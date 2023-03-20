@@ -1869,6 +1869,9 @@ namespace Texttool
 						byte b3 = text_data[off + 2];
 						byte b4 = text_data[off + 3];
 
+						if (b1 == 0xFF && b2 == 0xFF && b3 == 0xFF)
+							break;
+
 						if (b1 == 0x5C && b2 == 0x6B)
 						{
 							if (off == 0x16A4)
