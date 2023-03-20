@@ -43,7 +43,7 @@ An ongoing effort is being made to translate the game. Translated scripts can be
 - **TL:** 157/1107
 - **Edited:** 157/1107
 - **TLC:** 0/1107
-- **Lines:** 5644/47521
+- **Lines:** 5644/47638
 
 Check out [the progress spreadsheet for more information](/tl/progress.xlsx).
 
