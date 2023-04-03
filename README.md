@@ -18,7 +18,7 @@ The tool will apply the script located in the 'Data/Game/excel' folder. Note tha
 
 To use the translated scripts that are located in the [tl folder of this repo](/tl/), copy its files into your 'Data/Game/excel/trimmed' folder and click "Merge Trimmed" for each script you want to merge. This will merge the English columns F-J into your full scripts in the 'Data/Game/excel' folder if they exist or with a new script. Then click "Save".
 
-**Batch importing and saving is not yet supported**, so you have to do the above process manually for each script.
+To import all scripts in the 'Data/Game/excel/trimmed' folder, you will be prompted when dragging Script.sdat into the window for the first time. Upon sequential opens, click on "Import All" at the top. Then click "Save".
 
 ### Executable Patching
 Drag 'WHITE ALBUM.exe' into the window to apply the following changes:
@@ -34,7 +34,9 @@ This was a manual process that extracted 'MAINTEXT.fnt' from 'Font.pck' and stri
 Alternatively, there's a [Lunar IPS patch available for it here](/resources/Font%20patch.zip). Just apply it to 'Data/Font.pck'.
 
 ### Batch Import/Export/Merging
-Currently a TODO, which will happen when Form1.cs is made to be less terrible.
+To import all scripts in the 'Data/Game/excel/trimmed' folder, you will be prompted when dragging Script.sdat into the window for the first time. Upon sequential opens, click on "Import All" at the top. Then click "Save".
+
+Batch export/merge is not supported yet.
 
 ## Translation
 An ongoing effort is being made to translate the game. Translated scripts can be found in the [tl folder](/tl/). Batch importing is not supported yet.
