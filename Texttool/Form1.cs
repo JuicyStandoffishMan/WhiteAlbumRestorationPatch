@@ -35,8 +35,8 @@ namespace Texttool
 		private Script active_script = null;
 		private List<int> block_map = new List<int>();
 
-		public int CharsPerLine = 0x3D;
-		public int CharsPerMessage = 90;
+		public const int CharsPerMessage = 90;
+		public const int CharsPerLine = 0x38;// 0x3D;
 
 		public Form1()
 		{
@@ -242,7 +242,9 @@ namespace Texttool
 				if (s.IndexOf("<nopause>", i) == i)
 				{
 					i += 8;
-					sb.Append("<ｋａｅｒｂ>");
+					sb.Append("<nopause>");
+					char_count = 0;
+					line_count = 0;
 					continue;
 				}
 
@@ -321,7 +323,21 @@ namespace Texttool
 				{
 					int space = s.IndexOf(' ', i + 1);
 					int dash = s.IndexOf('-', i + 1);
-					int ind = (space != -1 ? space : dash);
+					int pause = s.IndexOf("<pause>", i + 1);
+					int nopause = s.IndexOf("<nopause>", i + 1);
+					// Get the min index out of space/dash/pause/nopause that is NOT -1
+					int ind = 10000000;
+					if (space != -1)
+						ind = Math.Min(ind, space);
+					if (dash != -1)
+						ind = Math.Min(ind, dash);
+					if (pause != -1)
+						ind = Math.Min(ind, pause);
+					if (nopause != -1)
+						ind = Math.Min(ind, nopause);
+					if (ind == 10000000)
+						ind = -1;
+
 					if (ind == -1)
 						ind = s.Length - (i + 1);
 					else
@@ -345,7 +361,20 @@ namespace Texttool
 						// Look ahead to get next word size
 						int next_space = s.IndexOf(' ', i + 1);
 						int next_dash = s.IndexOf('-', i + 1);
-						int next_ind = (next_space != -1 ? next_space : next_dash);
+						int next_pause = s.IndexOf("<pause>", i + 1);
+						int next_nopause = s.IndexOf("<nopause>", i + 1);
+						int next_ind = 10000000;
+						if (next_space != -1)
+							next_ind = Math.Min(next_ind, next_space);
+						if (next_dash != -1)
+							next_ind = Math.Min(next_ind, next_dash);
+						if (next_pause != -1)
+							next_ind = Math.Min(next_ind, next_pause);
+						if (next_nopause != -1)
+							next_ind = Math.Min(next_ind, next_nopause);
+						if (next_ind == 10000000)
+							next_ind = -1;
+
 						if (next_ind == -1)
 							next_ind = s.Length - (i + 1);
 						else

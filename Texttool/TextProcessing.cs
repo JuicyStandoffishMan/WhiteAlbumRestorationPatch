@@ -86,6 +86,26 @@ namespace Texttool
 			text = text.Replace("\n", "\\n");
 			text = text.Replace("<ｂｒｅａｋ>", "\\n");
 			text = text.Replace("<pause>", "");
+			if(text.EndsWith("<nopause>") && !text.EndsWith("<ｋａｅｒｂ>"))
+			{
+				//text += "<ｋａｅｒｂ>";
+				List<byte> endbytes = new List<byte>();
+				endbytes.Add(0x5c);
+				endbytes.Add(0x6b);
+				endbytes.Add(0);
+				endbytes.Add(0);
+				endbytes.Add(0xf);
+				endbytes.Add(0);
+				endbytes.Add(0);
+				endbytes.Add(0x3a);
+				endbytes.Add(0x1b);
+				endbytes.Add(0);
+				endbytes.Add(0);
+				endbytes.Add(1);
+				endbytes.Add(0x5c);
+				endbytes.Add(0x6e);
+				text = text.Replace("<nopause>", encoding.GetString(endbytes.ToArray()));
+			}
 			text = text.Replace("<nopause>", "");
 			// break kaerb
 			if (text.IndexOf("<ｋａｅｒｂ>") != -1)
@@ -252,10 +272,32 @@ namespace Texttool
 			List<byte> output = new List<byte>();
 			List<byte> lo = new List<byte>();
 			int off = 0;
+			bool skipnext = false;
 			foreach (var b in Blocks)
 			{
 				lo.Clear();
-				b.Write(lo);
+
+				if (skipnext)
+				{
+					skipnext = false;
+					var rb = b as RawBlock;
+					for (int i = 12; i < rb.Data.Length; i++)
+					{
+						lo.Add(rb.Data[i]);
+					}
+				}
+				else
+				{
+					b.Write(lo);
+
+					var lb = b as LineBlock;
+					if (lb != null)
+					{
+						if (lb.Text.EndsWith("<nopause>"))
+						{
+							skipnext = true;
+						}
+					}
 
 				if (compare != null)
 				{
@@ -267,6 +309,7 @@ namespace Texttool
 						{
 							throw new Exception("Mismatch at " + i + off);
 						}
+					}
 					}
 				}
 
