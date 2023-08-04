@@ -6,7 +6,7 @@ Delocalizes some content in White Album (2023 PC version), namely:
 - Replacing "Older Lady" with "Senpai"
 - Replacing "doll" with Rina-chan
 
-Hopefully that's all that needs to be delocalized!
+Please support the developers and purchase the game! This project, like the original, was created out of a love for it. We're super fortunate to have gotten an official re-release, and this projects aims to just make tiny adjustments to the script that are ever so slightly more faithful to the original text out of sheer personal preference.
 
 **Note:** This patch is largely untested and was created mostly automatically. Use at your own discretion!
 
