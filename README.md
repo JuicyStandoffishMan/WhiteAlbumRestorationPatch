@@ -1,5 +1,5 @@
 # White Album Restoration Patch 0.1
-Delocalizes some content in White Album (2023 PC Steam version), namely:
+A WIP patch that delocalizes some content in White Album (2023 PC Steam version), namely:
 
 - Restoring honorifics (-kun, -san, etc.) along with first/last names used
 - Removing Miss, Mr., etc.
@@ -8,7 +8,7 @@ Delocalizes some content in White Album (2023 PC Steam version), namely:
 
 Please support the developers and purchase the game! This project, like the original, was created out of a love for it. We're super fortunate to have gotten an official re-release, and this projects aims to just make tiny adjustments to the script that are ever so slightly more faithful to the original text out of sheer personal preference.
 
-**Note:** This patch is largely untested and was created mostly automatically. Use at your own discretion! **If you run into a problem with this patch applied, open an issue here.**
+**Note:** As of 8/4/2023, this patch is largely untested and was created mostly automatically, and will be improved over time. Use at your own discretion! **If you run into a problem with this patch applied, open an issue here.**
 
 ## How to apply
 1) Locate your **Data/Game/ENG/Scripts.sdat** file. For example, `C:\Program Files (x86)\Steam\steamapps\common\WHITE ALBUM\Data\Game\ENG\Script.sdat`
