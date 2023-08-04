@@ -8,7 +8,7 @@ Delocalizes some content in White Album (2023 PC version), namely:
 
 Hopefully that's all that needs to be delocalized!
 
-**Note:** This patch is largely untested. Use at your own discretion!
+**Note:** This patch is largely untested and was created mostly automatically. Use at your own discretion!
 
 ## How to apply
 - Download the [xdelta file](wa_honorifics.xdelta) and apply to your **Data/Game/ENG/Script.sdat** file using Delta Patcher. For example, `C:\Program Files (x86)\Steam\steamapps\common\WHITE ALBUM\Data\Game\ENG\Script.sdat`
