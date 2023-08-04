@@ -1,4 +1,4 @@
-# White Album Restoration Patch
+# White Album Restoration Patch 0.1
 Delocalizes some content in White Album (2023 PC version), namely:
 
 - Restoring honorifics (-kun, -san, etc.)
