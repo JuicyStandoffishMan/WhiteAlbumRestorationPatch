@@ -22,14 +22,15 @@ There are a handful of mixed application and now Python scripts for extracting, 
 4) Click "Export All". This will create a folder in the above directory called "excel\eng\" with the scripts inside.
 5) Change the game's language to Japanese from Steam
 6) Repeat steps 3-4, except instead of ENG, it'll be JPN
-7) Change the game's language back to English and re-drag the `Data\Game\ENG\Script.sdat` file into the text tool's window
-8) You should now have these folders:
+   - **Note:** A couple of the Japanese scripts will report a mismatch and have a row count mismatch. This will be looked into eventually. For now, you can just click OK and ignore them.
+8) Change the game's language back to English and re-drag the `Data\Game\ENG\Script.sdat` file into the text tool's window
+9) You should now have these folders:
    - ENG\excel\eng
    - JPN\excel\jpn
 
-9) Copy the jpn folder into the ENG\excel folder, so you have ENG\excel\eng and ENG\excel\jpn
-10) Copy all the python scripts from the [pyscripts](pyscripts/) folder
-11) Run `merge-en-jp.py` and it should produce a "merged" folder with a joint version of the scripts inside:
+10) Copy the jpn folder into the ENG\excel folder, so you have ENG\excel\eng and ENG\excel\jpn
+11) Copy all the python scripts from the [pyscripts](pyscripts/) folder
+12) Run `merge-en-jp.py` and it should produce a "merged" folder with a joint version of the scripts inside:
     - Column E "Japanese" with the Japanese text
     - Column G "Initial" with the English text
     - Column F "Edited" that's blank (though it might not have the "Edited" header
