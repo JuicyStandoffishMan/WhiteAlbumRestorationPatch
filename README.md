@@ -2,7 +2,7 @@
 
 ![img](yuki.png)
 
-This is a collection of tools to aid in extracting and modifying [White Album 1 (2023 Steam PC version)](https://vndb.org/r20439) resources to delocalize content. Up-to-date modified scripts **with the original texts taken out** are available in the [stripped folder](stripped/).
+This is a collection of tools to aid in extracting and modifying [White Album 1 (2023 Steam PC version)](https://vndb.org/r108248) resources to delocalize content. Up-to-date modified scripts **with the original texts taken out** are available in the [stripped folder](stripped/).
 
 ## Building
 You will need to have these installed:
