@@ -2,6 +2,9 @@
 Delocalizes some content in White Album (2023 PC version), namely:
 
 - Restoring honorifics (-kun, -san, etc.) along with first/last names used
+- Removing Miss, Mr., etc.
+- Replacing "Older Lady" with "Senpai"
+- Replacing "doll" with Rina-chan
 
 Hopefully that's all that needs to be delocalized!
 
