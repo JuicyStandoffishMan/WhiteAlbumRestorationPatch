@@ -38,9 +38,28 @@ namespace Texttool
 		{
 			get
 			{
+				string s = "";
+				int v = CharacterValue.b1 + (CharacterValue.b2 << 8);
+				for (int i = 0; i < 16; i++)
+				{
+					if ((v & (1 << i)) != 0)
+					{
+						if (s != "")
+							s += " & ";
+						s += Script.GetCharName(i + 1);
+					}
+				}
+
+				return s;
+			}
+		}
+		public string JapaneseCharacterName
+		{
+			get
+			{
 				if (CharacterValue.b2 == 1)
 				{
-					return Script.GetCharName(CharacterValue.b4 + 15);
+					return Script.GetJpCharName(CharacterValue.b4 + 15);
 				}
 				else
 				{
@@ -52,7 +71,7 @@ namespace Texttool
 						{
 							if (s != "")
 								s += " & ";
-							s += Script.GetCharName(i + 1);
+							s += Script.GetJpCharName(i + 1);
 						}
 					}
 
@@ -86,7 +105,7 @@ namespace Texttool
 			text = text.Replace("\n", "\\n");
 			text = text.Replace("<ｂｒｅａｋ>", "\\n");
 			text = text.Replace("<pause>", "");
-			if(text.EndsWith("<nopause>") && !text.EndsWith("<ｋａｅｒｂ>"))
+			if (text.EndsWith("<nopause>") && !text.EndsWith("<ｋａｅｒｂ>"))
 			{
 				//text += "<ｋａｅｒｂ>";
 				List<byte> endbytes = new List<byte>();
@@ -150,12 +169,18 @@ namespace Texttool
 
 		public static string[] char_names = new string[64];
 		public static string[] char_short_names = new string[64];
-		public static string[] jp_names = new string[32];
+		public static string[] jp_names = new string[64];
 		public static string GetCharName(int v)
 		{
 			if (v < 0 || v >= char_names.Length || string.IsNullOrEmpty(char_names[v]))
 				return v.ToString();
 			return char_names[v];
+		}
+		public static string GetJpCharName(int v)
+		{
+			if (v < 0 || v >= char_names.Length || string.IsNullOrEmpty(jp_names[v]))
+				return v.ToString();
+			return jp_names[v];
 		}
 		public static string GetShortCharName(int v)
 		{
@@ -232,38 +257,38 @@ namespace Texttool
 			char_short_names[31] = "Girl A";
 			char_short_names[32] = "Girl B";
 
-			jp_names[0] = "冬弥";
-			jp_names[1] = "由綺";
-			jp_names[2] = "理奈";
-			jp_names[3] = "はるか";
-			jp_names[4] = "美咲";
-			jp_names[5] = "マナ";
-			jp_names[6] = "弥生";
-			jp_names[7] = "小夜子";
-			jp_names[8] = "彰";
-			jp_names[9] = "英二";
-			jp_names[10] = "ノブコ";
-			jp_names[11] = "イズミ";
-			jp_names[12] = "長瀬";
-			jp_names[13] = "その他女性";
-			jp_names[14] = "？？？";
-			jp_names[15] = "ＡＤスタッフ";
-			jp_names[16] = "留守番電話";
-			jp_names[17] = "フロアディレクター";
-			jp_names[18] = "親父";
-			jp_names[19] = "宅配業者";
-			jp_names[20] = "女性の声";
-			jp_names[21] = "男性の声";
-			jp_names[22] = "七瀬";
-			jp_names[23] = "斡旋業者";
-			jp_names[24] = "酔っ払いＡ";
-			jp_names[25] = "酔っ払いＢ";
-			jp_names[26] = "澤倉";
-			jp_names[27] = "演劇部員";
-			jp_names[28] = "河島";
-			jp_names[29] = "女の子";
-			jp_names[30] = "女の子Ａ";
-			jp_names[31] = "女の子Ｂ";
+			jp_names[1] = "冬弥";
+			jp_names[2] = "由綺";
+			jp_names[3] = "理奈";
+			jp_names[4] = "はるか";
+			jp_names[5] = "美咲";
+			jp_names[6] = "マナ";
+			jp_names[7] = "弥生";
+			jp_names[8] = "小夜子";
+			jp_names[9] = "彰";
+			jp_names[10] = "英二";
+			jp_names[11] = "ノブコ";
+			jp_names[12] = "イズミ";
+			jp_names[13] = "長瀬";
+			jp_names[14] = "その他女性";
+			jp_names[15] = "？？？";
+			jp_names[16] = "ＡＤスタッフ";
+			jp_names[17] = "留守番電話";
+			jp_names[18] = "フロアディレクター";
+			jp_names[19] = "親父";
+			jp_names[20] = "宅配業者";
+			jp_names[21] = "女性の声";
+			jp_names[22] = "男性の声";
+			jp_names[23] = "七瀬";
+			jp_names[24] = "斡旋業者";
+			jp_names[25] = "酔っ払いＡ";
+			jp_names[26] = "酔っ払いＢ";
+			jp_names[27] = "澤倉";
+			jp_names[28] = "演劇部員";
+			jp_names[29] = "河島";
+			jp_names[30] = "女の子";
+			jp_names[31] = "女の子Ａ";
+			jp_names[32] = "女の子Ｂ";
 
 		}
 
@@ -299,17 +324,17 @@ namespace Texttool
 						}
 					}
 
-				if (compare != null)
-				{
-					for (int i = 0; i < lo.Count; i++)
+					if (compare != null)
 					{
-						byte b1 = lo[i];
-						byte b2 = compare[i + off];
-						if (lo[i] != compare[i + off])
+						for (int i = 0; i < lo.Count; i++)
 						{
-							throw new Exception("Mismatch at " + i + off);
+							byte b1 = lo[i];
+							byte b2 = compare[i + off];
+							if (lo[i] != compare[i + off])
+							{
+								throw new Exception("Mismatch at " + i + off);
+							}
 						}
-					}
 					}
 				}
 
@@ -327,7 +352,7 @@ namespace Texttool
 				Blocks = new List<Block>();
 				return;
 			}
-			var encoding = System.Text.CodePagesEncodingProvider.Instance.GetEncoding("Shift-JIS");
+			var encoding = System.Text.UTF8Encoding.UTF8;
 
 			int off = 0;
 			List<byte> bstring = new List<byte>();
@@ -354,6 +379,7 @@ namespace Texttool
 						if (text_data[off - 1] == 0)
 						{
 							// No character
+							continue;
 						}
 						else if (text_data[off - 1] == 1)
 						{
@@ -374,33 +400,33 @@ namespace Texttool
 							opcode = text_data[off++];
 							if (opcode == 0xF)
 							{
+								counter_id |= text_data[off++] << 8;
+								counter_id |= text_data[off++] << 0;
+
 								off++;
-								if (text_data[off] == 0)
-								{
-									off++;
-									counter_id |= text_data[off++] << 8;
-									counter_id |= text_data[off++] << 0;
-								}
-							}
-							else if ((opcode >= 0x80 || (opcode == 0x3C && (text_data[off] == 0x63 || text_data[off] == 0x52 || text_data[off] == 0x57))) && (text_data[off - 2] == 0 || text_data[off - 2] == 0x22))
-							{
-								off--;
+								off++;
+								off++;
+								off++;
+								off++;
 								string_start = true;
+
 								break;
 							}
 						}
 					}
 					else if (opcode == 0xF)
 					{
-						off++;
-						if (text_data[off] == 0)
-						{
-							off++;
-							counter_id |= text_data[off++] << 8;
-							counter_id |= text_data[off++] << 0;
-						}
+						counter_id |= text_data[off++] << 8;
+						counter_id |= text_data[off++] << 0;
 
-						while (off < text_data.Length)
+						off++;
+						off++;
+						off++;
+						off++;
+						off++;
+						string_start = true;
+
+						/*while (off < text_data.Length)
 						{
 							opcode = text_data[off++];
 							if ((opcode >= 0x80 || (opcode == 0x3C && (text_data[off] == 0x63 || text_data[off] == 0x52 || text_data[off] == 0x57))) && text_data[off - 2] == 0)
@@ -416,7 +442,7 @@ namespace Texttool
 								in_option = true;
 								break;
 							}
-						}
+						}*/
 					}
 					else if (opcode == 0xFF)
 					{
@@ -432,7 +458,10 @@ namespace Texttool
 					string s = "";
 					if (!string_start)
 						continue;
-
+					if (off >= 2045)
+					{
+						Console.WriteLine("A");
+					}
 					int start = off;
 					LineBlock last_line_block = null;
 					for (; off + 4 < text_data.Length; off++)
@@ -441,6 +470,9 @@ namespace Texttool
 						byte b2 = text_data[off + 1];
 						byte b3 = text_data[off + 2];
 						byte b4 = text_data[off + 3];
+
+						if (b1 < 0x20)
+							break;
 
 						if (b1 == 0xFF && b2 == 0xFF && b3 == 0xFF)
 							break;
@@ -527,13 +559,7 @@ namespace Texttool
 						{
 							break;
 						}
-						if (b1 == 0 && b3 != 0x41 && b3 != 0x42 && b3 != 0x16 && b3 != 0x25)
-						{
-							bstring.Clear();
-							off += 2;
-							continue;
-						}
-						if (b1 == 0 && (b3 == 0x41 || b3 == 0x42 || b3 == 0x16 || b3 == 0x25))
+						if (b1 == 0)
 						{
 							break;
 						}

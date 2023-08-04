@@ -41,14 +41,13 @@
 			listBox1 = new System.Windows.Forms.ListBox();
 			button4 = new System.Windows.Forms.Button();
 			button5 = new System.Windows.Forms.Button();
-			button6 = new System.Windows.Forms.Button();
 			toolTip1 = new System.Windows.Forms.ToolTip(components);
-			button3 = new System.Windows.Forms.Button();
 			button7 = new System.Windows.Forms.Button();
 			button8 = new System.Windows.Forms.Button();
 			button9 = new System.Windows.Forms.Button();
 			txtLines = new System.Windows.Forms.TextBox();
-			button10 = new System.Windows.Forms.Button();
+			button12 = new System.Windows.Forms.Button();
+			button13 = new System.Windows.Forms.Button();
 			SuspendLayout();
 			// 
 			// label2
@@ -158,6 +157,7 @@
 			listBox1.Name = "listBox1";
 			listBox1.Size = new System.Drawing.Size(969, 224);
 			listBox1.TabIndex = 12;
+			listBox1.SelectedIndexChanged += listBox1_SelectedIndexChanged;
 			listBox1.DoubleClick += listBox1_DoubleClick;
 			// 
 			// button4
@@ -183,28 +183,6 @@
 			button5.Text = "Import";
 			button5.UseVisualStyleBackColor = false;
 			button5.Click += button5_Click;
-			// 
-			// button6
-			// 
-			button6.BackColor = System.Drawing.Color.FromArgb(192, 255, 192);
-			button6.Location = new System.Drawing.Point(181, 40);
-			button6.Name = "button6";
-			button6.Size = new System.Drawing.Size(149, 23);
-			button6.TabIndex = 15;
-			button6.Text = "Merge Trimmed";
-			button6.UseVisualStyleBackColor = false;
-			button6.Click += button6_Click;
-			// 
-			// button3
-			// 
-			button3.BackColor = System.Drawing.Color.FromArgb(255, 192, 192);
-			button3.Location = new System.Drawing.Point(507, 41);
-			button3.Name = "button3";
-			button3.Size = new System.Drawing.Size(129, 23);
-			button3.TabIndex = 16;
-			button3.Text = "Export Trimmed";
-			button3.UseVisualStyleBackColor = false;
-			button3.Click += button3_Click_1;
 			// 
 			// button7
 			// 
@@ -253,16 +231,29 @@
 			txtLines.TabIndex = 20;
 			txtLines.WordWrap = false;
 			// 
-			// button10
+			// button12
 			// 
-			button10.BackColor = System.Drawing.Color.DodgerBlue;
-			button10.Location = new System.Drawing.Point(384, 40);
-			button10.Name = "button10";
-			button10.Size = new System.Drawing.Size(83, 23);
-			button10.TabIndex = 21;
-			button10.Text = "Import All";
-			button10.UseVisualStyleBackColor = false;
-			button10.Click += button10_Click;
+			button12.BackColor = System.Drawing.Color.FromArgb(255, 128, 128);
+			button12.Font = new System.Drawing.Font("Segoe UI", 9F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point);
+			button12.Location = new System.Drawing.Point(852, 40);
+			button12.Name = "button12";
+			button12.Size = new System.Drawing.Size(129, 23);
+			button12.TabIndex = 23;
+			button12.Text = "Export All";
+			button12.UseVisualStyleBackColor = false;
+			button12.Click += button12_Click;
+			// 
+			// button13
+			// 
+			button13.BackColor = System.Drawing.Color.FromArgb(128, 255, 128);
+			button13.Font = new System.Drawing.Font("Segoe UI", 9F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point);
+			button13.Location = new System.Drawing.Point(17, 40);
+			button13.Name = "button13";
+			button13.Size = new System.Drawing.Size(149, 23);
+			button13.TabIndex = 24;
+			button13.Text = "Import All";
+			button13.UseVisualStyleBackColor = false;
+			button13.Click += button13_Click;
 			// 
 			// Form1
 			// 
@@ -270,13 +261,12 @@
 			AutoScaleDimensions = new System.Drawing.SizeF(7F, 15F);
 			AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
 			ClientSize = new System.Drawing.Size(998, 918);
-			Controls.Add(button10);
+			Controls.Add(button13);
+			Controls.Add(button12);
 			Controls.Add(txtLines);
 			Controls.Add(button9);
 			Controls.Add(button8);
 			Controls.Add(button7);
-			Controls.Add(button3);
-			Controls.Add(button6);
 			Controls.Add(button5);
 			Controls.Add(button4);
 			Controls.Add(listBox1);
@@ -311,13 +301,12 @@
 		private System.Windows.Forms.ListBox listBox1;
 		private System.Windows.Forms.Button button4;
 		private System.Windows.Forms.Button button5;
-		private System.Windows.Forms.Button button6;
 		private System.Windows.Forms.ToolTip toolTip1;
-		private System.Windows.Forms.Button button3;
 		private System.Windows.Forms.Button button7;
 		private System.Windows.Forms.Button button8;
 		private System.Windows.Forms.Button button9;
 		private System.Windows.Forms.TextBox txtLines;
-		private System.Windows.Forms.Button button10;
+		private System.Windows.Forms.Button button12;
+		private System.Windows.Forms.Button button13;
 	}
 }

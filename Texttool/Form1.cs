@@ -38,6 +38,8 @@ namespace Texttool
 		public const int CharsPerMessage = 90;
 		public const int CharsPerLine = 0x38;// 0x3D;
 
+		public static bool IsEnglish = true;
+
 		public Form1()
 		{
 			InitializeComponent();
@@ -53,7 +55,7 @@ namespace Texttool
 		{
 			System.Text.Encoding.RegisterProvider(System.Text.CodePagesEncodingProvider.Instance);
 
-			comboBox1.Items.Add("Shift-JIS");
+			comboBox1.Items.Add("UTF8");
 			comboBox1.SelectedIndex = 0;
 
 			edit_box.Size = textBox2.Size;
@@ -67,13 +69,13 @@ namespace Texttool
 
 			button4.Tag = "Exports the selected script.\n\nThis will create a source .bin file, or re-load it if it already exists.";
 			button5.Tag = "Imports the selected script by loading the corresponding full excel spreadsheet and writes to the Scripts.sdat buffer.";
-			button6.Tag = "Merges the selected script with the corresponding trimmed excel spreadsheet.";
-			button3.Tag = "Trims the Japanese text from the selected script and writes it to the trimmed folder.";
+			//button6.Tag = "Merges the selected script with the corresponding trimmed excel spreadsheet.";
+			//button3.Tag = "Trims the Japanese text from the selected script and writes it to the trimmed folder.";
 
 			button4.MouseHover += Button_Showtooltip;
 			button5.MouseHover += Button_Showtooltip;
-			button6.MouseHover += Button_Showtooltip;
-			button3.MouseHover += Button_Showtooltip;
+			//button6.MouseHover += Button_Showtooltip;
+			//button3.MouseHover += Button_Showtooltip;
 
 			populate(Texttool.Properties.Settings.Default.last_dir);
 		}
@@ -121,7 +123,7 @@ namespace Texttool
 
 			if (path.ToLower().EndsWith(".tex"))
 			{
-				TEXFile tex = new TEXFile { UseBigEndian = true };
+				TEXFile tex = new TEXFile { UseBigEndian = false };
 				tex.Load(path, true);
 				if (tex.Frames.Count > 1)
 				{
@@ -133,7 +135,7 @@ namespace Texttool
 			}
 			else if (path.EndsWith(".fnt"))
 			{
-				read_fnt(path);
+				//read_fnt(path);
 				return;
 			}
 			else if (path.EndsWith(".png"))
@@ -145,7 +147,7 @@ namespace Texttool
 			}
 			else if (path.ToLower().EndsWith("white album.exe"))
 			{
-				patch_exe(path);
+				//patch_exe(path);
 				return;
 			}
 			else if (path.ToLower().EndsWith("bgm.pck"))
@@ -170,6 +172,15 @@ namespace Texttool
 				save = true;
 			}
 
+			if (path.ToLower().EndsWith("eng\\script.sdat") || path.ToLower().EndsWith("eng/scripts.sdat"))
+			{
+				IsEnglish = true;
+			}
+			else
+			{
+				IsEnglish = false;
+			}
+
 			string slist = "";
 			cbFile.Items.Clear();
 
@@ -178,21 +189,24 @@ namespace Texttool
 			last_filter_char_count = 0;
 			last_filter_string = "";
 
-			pck_file = new PCKFile { UseBigEndian = true };
+			pck_file = new PCKFile { UseBigEndian = false };
 			pck_file.Load(path, false);
 			foreach (var v in pck_file.FileEntries)
 			{
-				cbFile.Items.Add(v.FileName);// + " (" + v.DataLength + " bytes)");
-				slist += v.FileName + "\n";
+				if (!v.FileName.StartsWith("S99") && !v.FileName.StartsWith("Script.flag"))
+				{
+					cbFile.Items.Add(v.FileName);// + " (" + v.DataLength + " bytes)");
+					slist += v.FileName + "\n";
+				}
 			}
 			if (save)
 			{
-				if (MessageBox.Show("Would you like to import all scripts from the trimmed folder?", "Import trimmed scripts?", MessageBoxButtons.YesNo) == DialogResult.Yes)
+				/*if (MessageBox.Show("Would you like to import all scripts from the trimmed folder?", "Import trimmed scripts?", MessageBoxButtons.YesNo) == DialogResult.Yes)
 				{
 					ImportAll();
-				}
+				}*/
 			}
-			PrintProgress();
+			//PrintProgress();
 			//Clipboard.SetText(slist);
 			//pck_file.ExtractAllFiles(Path.GetFileNameWithoutExtension(filePath));
 			cbFile.Enabled = true;
@@ -202,7 +216,7 @@ namespace Texttool
 
 			button1.Text = "Find";
 
-			this.Text = Path.GetFileName(path) + " - White Album script viewer";
+			this.Text = Path.GetFileName(path) + " (" + (IsEnglish ? "English" : "Japanese") + ") - White Album script viewer";
 
 
 			if (save)
@@ -419,7 +433,15 @@ namespace Texttool
 			int num_translated_words = 0;
 			foreach (var v in pck_file.FileEntries)
 			{
-				Script ss = new Script(v.Data);
+				Script ss;
+				if (File.Exists("C:\\Program Files\\WA1\\Data\\Game\\excel\\blob\\" + v.FileName))
+				{
+					ss = new Script(File.ReadAllBytes("C:\\Program Files\\WA1\\Data\\Game\\excel\\blob\\" + v.FileName));
+				}
+				else
+				{
+					ss = new Script(v.Data);
+				}
 				foreach (var block in ss.Blocks)
 				{
 					if (block is LineBlock)
@@ -473,7 +495,7 @@ namespace Texttool
 
 		private void patch_exe(string path)
 		{
-			var encoding = System.Text.CodePagesEncodingProvider.Instance.GetEncoding("Shift-JIS");
+			var encoding = System.Text.UTF8Encoding.UTF8;
 
 			int spacing = -13;
 
@@ -647,7 +669,7 @@ namespace Texttool
 			{
 				Directory.CreateDirectory(folder);
 			}
-			var pck = new PCKFile { UseBigEndian = true };
+			var pck = new PCKFile { UseBigEndian = false };
 			pck.Load(path, false);
 			foreach (var v in pck.FileEntries)
 			{
@@ -662,7 +684,7 @@ namespace Texttool
 			{
 				Directory.CreateDirectory(folder);
 			}
-			var pck = new PCKFile { UseBigEndian = true };
+			var pck = new PCKFile { UseBigEndian = false };
 			pck.Load(path, false);
 			foreach (var v in pck.FileEntries)
 			{
@@ -708,17 +730,17 @@ namespace Texttool
 			//bmp.Save(fname + " - copy.png");
 
 			{
-				PCKFile fnt_file = new PCKFile { UseBigEndian = true };
+				PCKFile fnt_file = new PCKFile { UseBigEndian = false };
 				fnt_file.Load("C:\\Program Files\\WA1\\Font.pck");
-				ExtendedBinaryReader reader = new ExtendedBinaryReader(fnt_file.GetFileStream("MAINTEXT.fnt"), true);
-				ExtendedBinaryWriter writer = new ExtendedBinaryWriter(new MemoryStream(64 * 1024 * 1024), true);
+				ExtendedBinaryReader reader = new ExtendedBinaryReader(fnt_file.GetFileStream("MAINTEXT.fnt"), false);
+				ExtendedBinaryWriter writer = new ExtendedBinaryWriter(new MemoryStream(64 * 1024 * 1024), false);
 
 				reader.JumpAhead(8);
 				int tex_off = reader.ReadInt32();
 				int char_height = reader.ReadInt32();
 				int orig_char_count = reader.ReadInt32();
 
-				writer.WriteDALSignature("Table", true);
+				writer.WriteDALSignature("Table", false);
 				writer.AddOffset("size");
 				writer.Write(27);
 				writer.AddOffset("char_count");
@@ -981,7 +1003,7 @@ namespace Texttool
 
 		private void update_text()
 		{
-			var encoding = System.Text.CodePagesEncodingProvider.Instance.GetEncoding("Shift-JIS");
+			var encoding = System.Text.UTF8Encoding.UTF8;
 
 			int off = 0;
 			List<byte> bstring = new List<byte>();
@@ -990,14 +1012,18 @@ namespace Texttool
 			last_filter_char_count = 0;
 			last_filter_string = "";
 
-			active_script = new Script(text_data);
 			try
 			{
+				active_script = new Script(text_data);
 				active_script.Compile(text_data);
 			}
 			catch (Exception ex)
 			{
-				MessageBox.Show(ex.Message);
+				if (active_script == null || active_script.Blocks.Count > 1)
+				{
+					MessageBox.Show(ex.Message);
+					return;
+				}
 			}
 
 			string sum = "";
@@ -1087,7 +1113,7 @@ namespace Texttool
 			if (textBox2.Text == "")
 				return;
 
-			var encoding = System.Text.CodePagesEncodingProvider.Instance.GetEncoding("Shift-JIS");
+			var encoding = System.Text.UTF8Encoding.UTF8;
 			for (int i = 0; i < pck_file.FileEntries.Count; i++)
 			{
 				var file = pck_file.FileEntries[i];
@@ -1148,7 +1174,7 @@ namespace Texttool
 			last_filter_char_count = 0;
 			last_filter_string = "";
 
-			pck_file.UseBigEndian = true;
+			pck_file.UseBigEndian = false;
 			pck_file.ReplaceFile(cbFile.GetItemText(pck_file.FileEntries[cbFile.SelectedIndex].FileName), active_script.Compile(null));
 			pck_file.Save(Texttool.Properties.Settings.Default.last_dir);
 
@@ -1185,13 +1211,15 @@ namespace Texttool
 
 		private void export_excel(bool include_jp, bool merge_trimmed, string[] src_col_values = null)
 		{
-			var dir = Path.GetDirectoryName(Texttool.Properties.Settings.Default.last_dir) + "\\excel\\";
+			var dir = Path.GetDirectoryName(Texttool.Properties.Settings.Default.last_dir) + "\\excel\\" + (IsEnglish ? "eng\\" : "jap\\");
 			if (dir == null || pck_file == null)
 				return;
 
 			if (!include_jp)
 				dir += "trimmed\\";
 			Directory.CreateDirectory(dir);
+			Directory.CreateDirectory(dir + "blob\\");
+
 			string fname = cbFile.GetItemText(cbFile.SelectedItem);
 			if (File.Exists(dir + fname + ".xlsx") && include_jp && !merge_trimmed)
 			{
@@ -1301,9 +1329,9 @@ namespace Texttool
 					.SetDefaultStyle(s1).Write(bid.ToString())
 					.SetDefaultStyle(s1).Write((line.CharacterValue.b4 != 0 ? line.CharacterValue.b4.ToString() : ""))
 					.SetDefaultStyle(s1).Write(line.CharacterName)
-					.SetDefaultStyle(s1).Write(include_jp ? line.Text.Replace("\\n", "") : "")
+					.SetDefaultStyle(s1).Write(!IsEnglish && include_jp ? line.Text : "")
 					.SetDefaultStyle(s1).Write(col_values[0])
-					.SetDefaultStyle(s2).Write(col_values[1])
+					.SetDefaultStyle(s2).Write(IsEnglish && include_jp ? line.Text : "")
 					.SetDefaultStyle(s2).Write(col_values[2])
 					.SetDefaultStyle(s2).Write(col_values[3])
 					.SetDefaultStyle(s2).Write(col_values[4]);
@@ -1321,7 +1349,114 @@ namespace Texttool
 
 		private void button5_Click(object sender, EventArgs e)
 		{
-			import_spreadsheet();
+			if (!IsEnglish)
+			{
+				MessageBox.Show("Can only import English scripts", "English Only", MessageBoxButtons.OK, MessageBoxIcon.Error);
+				return;
+			}
+
+			//import_spreadsheet();
+			import_raw_spreadsheet("", "stripped\\");
+		}
+
+		static string sum_removed = "";
+		private void import_raw_spreadsheet(string fname = "", string extra_folder = "")
+		{
+			try
+			{
+				var dir = Path.GetDirectoryName(Texttool.Properties.Settings.Default.last_dir) + "\\excel\\" + extra_folder;
+				if (string.IsNullOrEmpty(fname))
+				{
+					fname = cbFile.GetItemText(cbFile.SelectedItem);
+				}
+				if (!File.Exists(dir + fname + ".xlsx"))
+				{
+					return;
+				}
+				using var stream = new FileStream(dir + fname + ".xlsx", FileMode.Open, FileAccess.Read, FileShare.ReadWrite);
+				using var reader = ExcelReaderFactory.CreateReader(stream);
+
+				Script new_script = null;
+				if(File.Exists(dir + "blob\\" + fname))
+					new_script = new Script(File.ReadAllBytes(dir + "blob\\" + fname));
+				else if(File.Exists(Path.GetDirectoryName(Texttool.Properties.Settings.Default.last_dir) + "\\excel\\eng\\blob\\" + fname))
+					new_script = new Script(File.ReadAllBytes(Path.GetDirectoryName(Texttool.Properties.Settings.Default.last_dir) + "\\excel\\eng\\blob\\" + fname));
+				else
+					throw new FileNotFoundException("Missing " + fname + " blob file");
+
+				int block = 0;
+				do
+				{
+					reader.Read();
+					while (reader.Read())
+					{
+						int src_index = 0;
+
+						string status = reader.GetString(0);
+						string str_bid = reader.GetString(1);
+						string id = reader.GetString(2);
+						string name = reader.GetString(3);
+						string jp_text = reader.GetString(4);
+						string en_text = reader.GetString(6);
+						if (str_bid == null)
+							continue;
+						if (!string.IsNullOrEmpty(reader.GetString(5)))
+							en_text = reader.GetString(5);
+
+						LineBlock line_block = null;
+						if (str_bid != null)
+						{
+							if (!int.TryParse(str_bid, out src_index) || src_index < 0 || src_index >= new_script.Blocks.Count)
+							{
+								throw new Exception("Block ID mismatch (" + str_bid + ")");
+							}
+
+							line_block = new_script.Blocks[src_index] as LineBlock;
+						}
+						else
+						{
+							while (line_block == null && block < new_script.Blocks.Count)
+							{
+								src_index = block;
+								Block b = new_script.Blocks[block++];
+								line_block = b as LineBlock;
+							}
+						}
+						if (line_block == null)
+						{
+							throw new Exception("Line block mismatch (" + str_bid + " " + jp_text + ")");
+						}
+
+						LineBlock src_line_block = active_script.Blocks[src_index] as LineBlock;
+						if (src_line_block != null)
+						{
+							if (string.IsNullOrEmpty(en_text))
+								en_text = src_line_block.Text;
+							else if (src_line_block.Text.StartsWith(" ") && !en_text.StartsWith(" "))
+							{
+								en_text = " " + en_text;
+							}
+						}
+
+						line_block.Text = en_text;
+
+						new_script.Blocks[src_index] = line_block;
+					}
+				} while (reader.NextResult());
+
+				active_script = new_script;
+				text_data = new_script.Compile(null);
+
+				update_text();
+				pck_file.ReplaceFile(fname, text_data);
+
+				btnSave.Text = "Save *";
+				btnSave.BackColor = Color.FromArgb(255, 200, 150);
+			}
+			catch (Exception ex)
+			{
+				MessageBox.Show("Failed to import " + fname + ":" + ex.Message);
+			}
 		}
 
 		private void import_spreadsheet(string fname = "")
@@ -1609,6 +1744,102 @@ namespace Texttool
 			{
 				ImportAll();
 			}
+		}
+
+		private void button11_Click(object sender, EventArgs e)
+		{
+			StringBuilder sb = new StringBuilder();
+
+			foreach (var v in pck_file.FileEntries)
+			{
+				var ss = new Script(v.Data);
+				bool appended = false;
+				foreach (var block in ss.Blocks)
+				{
+					var line = block as LineBlock;
+					if (line != null)
+					{
+						if (line.IsDialogue && line.JapaneseCharacterName != "")
+						{
+							sb.Append(line.JapaneseCharacterName + ": ");
+						}
+
+						var text = line.Text.Replace("<pause>", "").Replace("<nopause>", "").Replace("<break>", "").Replace("<ｋａｅｒｂ>", "").Replace("<ｂｒｅａｋ>", "").Replace("\\n", "");
+						sb.Append(text);
+						sb.AppendLine();
+
+						appended = true;
+					}
+				}
+				if (appended)
+					sb.AppendLine("[[EndFile]]");
+			}
+
+			Clipboard.SetText(sb.ToString());
+		}
+
+		private void button12_Click(object sender, EventArgs e)
+		{
+			for (int i = 0; i < cbFile.Items.Count; i++)
+			{
+				try
+				{
+					cbFile.SelectedIndex = i;
+
+					export_excel(true, false);
+				}
+				catch (Exception ex)
+				{
+					Console.WriteLine(i.ToString() + ": " + ex.Message);
+				}
+			}
+
+			cbFile.SelectedIndex = 100;
+		}
+
+		private void button13_Click(object sender, EventArgs e)
+		{
+			sum_removed = "";
+
+			for (int i = 0; i < cbFile.Items.Count; i++)
+			{
+				try
+				{
+					cbFile.SelectedIndex = i;
+
+					import_raw_spreadsheet("", "stripped\\");
+				}
+				catch (Exception ex)
+				{
+					Console.WriteLine(i.ToString() + ": " + ex.Message);
+				}
+			}
+
+			cbFile.SelectedIndex = 100;
+		}
+
+		private void listBox1_SelectedIndexChanged(object sender, EventArgs e)
+		{
+
+		}
+
+		private void button14_Click(object sender, EventArgs e)
+		{
+			for (int i = 0; i < cbFile.Items.Count; i++)
+			{
+				try
+				{
+					cbFile.SelectedIndex = i;
+
+					export_excel(true, false);
+				}
+				catch (Exception ex)
+				{
+					Console.WriteLine(i.ToString() + ": " + ex.Message);
+				}
+			}
+
+			cbFile.SelectedIndex = 100;
 		}
 	}
 }
