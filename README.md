@@ -39,7 +39,7 @@ Follow these steps to re-import your modified scripts into the game.
 
 **Column F "Edited", which sits between the original Japanese and English columns, is the column used when importing modified scripts, NOT Column G "Initial".**
 
-1) Run `strip.py` to create a folder called "stripped" with all the scripts inside it and their original Japaense & English texts removed. **These are the only scripts allowed in this repository.**
+1) Run `strip.py` to create a folder called "stripped" with all the scripts inside it and their original Japanese & English texts removed. **These are the only scripts allowed in this repository.**
 2) (Optional) Run `remove_file_metadata.py` to remove all of Excel's metadata from the scripts
 3) If you haven't already, re-drag the Data\Game\ENG\Script.sdat into the text tool's window
 4) Select the script you want to import from the dropdown on the top left, or click Import All
