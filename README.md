@@ -4,6 +4,8 @@
 
 This is a collection of tools to aid in extracting and modifying [White Album 1 (2023 Steam PC version)](https://vndb.org/r108248) resources to delocalize content. Up-to-date modified scripts **with the original texts taken out** are available in the [stripped folder](stripped/).
 
+Please support the developers and purchase the game! This project, like the original, was created out of a love for it. We're super fortunate to have gotten an official re-release, and this projects aims to just make tiny adjustments to the script that are ever so slightly more faithful to the original text out of sheer personal preference.
+
 ## Building
 You will need to have these installed:
 - Visual Studio 2022 with .NET Core 6.
