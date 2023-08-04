@@ -52,6 +52,6 @@ Follow these steps to re-import your modified scripts into the game.
 - [DALTools](https://github.com/thesupersonic16/DALTools)
 
 ## Disclaimer
-This repo and its contributors are not affiliated with Leaf/Aquaplus. None of the original game's content (outside of a screenshot) is in this repo for copyright reasons.
+This repo and its contributors are not affiliated with Leaf, Aquaplus, DMM, or Shiravune. None of the original game's content (outside of a screenshot) is in this repo for copyright reasons.
 
 This repo used to exist as a translation project for the 2012 PC version, but has been revamped to "delocalize" some of the content, like the choice to remove honorifics in the names. As such, the code, which was a mess originally, is an even bigger mess now thanks to its quick fixes to support the newer release.
