@@ -17,7 +17,7 @@ You will need to have these installed:
 There are a handful of mixed application and now Python scripts for extracting, modifying, and importing the scripts.
 
 1) Install the Steam version in English. You can change it by going into the game's properties from the library and changing the language.
-2) Navigate to the install directory (likely C:\Program Files (x86)\Steam\steamapps\common\WHITE ALBUM
+2) Navigate to the install directory (likely `C:\Program Files (x86)\Steam\steamapps\common\WHITE ALBUM\`)
 3) Drag the file `Data\Game\ENG\Script.sdat` into the text tools's window
 4) Click "Export All". This will create a folder in the above directory called "excel\eng\" with the scripts inside.
 5) Change the game's language to Japanese from Steam
