@@ -2,7 +2,7 @@
 
 ![img](yuki.png)
 
-This is a collection of tools to aid in extracting and modifying [White Album 1 (2023 Steam PC version)](https://vndb.org/r20439) resources to delocalize content.
+This is a collection of tools to aid in extracting and modifying [White Album 1 (2023 Steam PC version)](https://vndb.org/r20439) resources to delocalize content. Up-to-date modified scripts **with the original texts taken out** are available in the [stripped folder](stripped/).
 
 ## Building
 You will need to have these installed:
@@ -26,7 +26,7 @@ There are a handful of mixed application and now Python scripts for extracting, 
    - JPN\excel\jpn
 
 9) Copy the jpn folder into the ENG\excel folder, so you have ENG\excel\eng and ENG\excel\jpn
-10) Copy all the python scripts from the [scripts](scripts/) folder
+10) Copy all the python scripts from the [pyscripts](pyscripts/) folder
 11) Run `merge-en-jp.py` and it should produce a "merged" folder with a joint version of the scripts inside:
     - Column E "Japanese" with the Japanese text
     - Column G "Initial" with the English text
