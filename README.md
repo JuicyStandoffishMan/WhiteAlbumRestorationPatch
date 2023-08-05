@@ -11,6 +11,7 @@ Please support the developers and purchase the game! This project, like the orig
 **Note:** As of 8/5/2023, this patch is largely untested and was created mostly automatically, and will be improved over time. Use at your own discretion! **If you run into a problem with this patch applied, open an issue here.**
 
 ## How to apply
+**If you're applying a newer patch, make sure it's applied to the original Script.sdat file, NOT a pre-patched one.**
 1) Locate your **Data/Game/ENG/Script.sdat** file. For example, `C:\Program Files (x86)\Steam\steamapps\common\WHITE ALBUM\Data\Game\ENG\Script.sdat`
 2) Make a backup of it. For example, just copy/paste the file in Windows so you have a copy of it. If you don't and want to restore, you'll have to re-install the game from Steam.
 3) Double-check that you made a backup of it.
